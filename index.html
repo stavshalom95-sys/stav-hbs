@@ -212,6 +212,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
       <div class="chart-card" id="chart-stadiums"></div>
     </div>
     <div class="section">
+      <div class="section-title"><span class="dot" style="background:var(--yellow)"></span>אחוז הצלחה לפי איצטדיון</div>
+      <div class="chart-card" id="chart-stadium-success"></div>
+    </div>
+    <div class="section">
       <div class="section-title"><span class="dot" style="background:#f472b6"></span>שופטים מובילים</div>
       <div class="chart-card" id="chart-referees"></div>
     </div>
@@ -462,6 +466,40 @@ function renderBar(elId, data, colorFn, labelKey, showAvg=false) {
   }).join('');
 }
 
+function renderStadiumSuccessStats() {
+  const stadMap = {};
+  state.matches.forEach(m => {
+    const hasBs = m.home === MY_TEAM || m.away === MY_TEAM;
+    const hasIsrael = m.home === ISRAEL_TEAM || m.away === ISRAEL_TEAM;
+    if (!hasBs && !hasIsrael) return;
+    if (!m.stadium || !m.result) return;
+    if (!stadMap[m.stadium]) stadMap[m.stadium] = {w:0,d:0,l:0};
+    const r = getResult(m);
+    if (r.cls === 'win') stadMap[m.stadium].w++;
+    else if (r.cls === 'loss') stadMap[m.stadium].l++;
+    else stadMap[m.stadium].d++;
+  });
+  const data = Object.entries(stadMap)
+    .map(([name, s]) => {
+      const total = s.w + s.d + s.l;
+      const pts = s.w * 3 + s.d;
+      const pct = total > 0 ? Math.round((pts / (total * 3)) * 100) : 0;
+      return { name, w: s.w, d: s.d, l: s.l, total, pts, pct };
+    })
+    .sort((a, b) => b.pct - a.pct || b.total - a.total);
+  const el = document.getElementById('chart-stadium-success');
+  if (!el) return;
+  el.innerHTML = data.map(d => {
+    const color = d.pct >= 60 ? '#10d98a' : d.pct >= 40 ? '#ffd32a' : '#ff4757';
+    const barW = Math.max(8, d.pct);
+    return `<div class="bar-row">
+      <div class="bar-label" title="${d.name}">${d.name}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${barW}%;background:${color}"><span class="bar-val">${d.pct}%</span></div></div>
+      <div class="bar-avg" style="width:80px">${d.w}נ&nbsp;${d.d}ת&nbsp;${d.l}ה</div>
+    </div>`;
+  }).join('');
+}
+
 function renderCharts() {
   renderBar('chart-days', state.days.filter(d=>d.day!=='Grand Total'), ()=>'#4f7dff', 'day');
   renderBar('chart-frameworks', state.frameworks, (n)=>fwColor(n), 'name');
@@ -469,6 +507,7 @@ function renderCharts() {
   renderBar('chart-referees', state.referees, ()=>'#f472b6', 'name');
   renderBar('chart-home', state.homeTeams, ()=>'#34d399', 'name');
   renderBar('chart-away', state.awayTeams, ()=>'#fb923c', 'name');
+  renderStadiumSuccessStats();
 }
 
 // ── SCORERS ───────────────────────────────────────────────────────────────────
@@ -499,7 +538,7 @@ function populateFilters() {
   const teams = [...new Set(state.matches.flatMap(m=>[m.home,m.away]))].sort();
   const sEl=document.getElementById('filter-stadium'), tEl=document.getElementById('filter-team');
   const curS=sEl.value, curT=tEl.value;
-  sEl.innerHTML='<option value="">כל האיצטדיונים</option>'+stadiums.map(s=>`<option ${s===curS?'selected':''} value="${s}">${s}</option>`).join('');
+  sEl.innerHTML='<option value="">כל האיצטדיונים</option>'+stadiums.map(s=>`<option ${s===curS?'selected':''} value="${s.replace(/"/g,'&quot;')}">${s}</option>`).join('');
   tEl.innerHTML='<option value="">כל הקבוצות</option>'+teams.map(t=>`<option ${t===curT?'selected':''} value="${t}">${t}</option>`).join('');
 }
 
