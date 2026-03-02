@@ -32,6 +32,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .stat-value{font-size:22px;font-weight:900;line-height:1;}
 .stat-label{font-size:10px;color:var(--muted);margin-top:3px;}
 .accent-blue{color:var(--accent);} .accent-green{color:var(--green);} .accent-yellow{color:var(--yellow);}
+.wdl-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:10px;display:flex;align-items:center;justify-content:space-around;margin-top:8px;}
+.wdl-item{text-align:center;flex:1;}
+.wdl-sep{width:1px;height:32px;background:var(--border);}
+.share-btn{display:flex;align-items:center;gap:5px;background:none;border:1px solid #1d9bf0;border-radius:10px;padding:7px 11px;color:#1d9bf0;font-size:12px;font-weight:700;font-family:var(--font);cursor:pointer;}
+.share-btn:active{transform:scale(0.97);}
 
 .tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:10px 16px;background:var(--bg);position:sticky;top:138px;z-index:90;}
 .tab{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:8px 2px;font-size:11px;font-weight:700;font-family:var(--font);color:var(--muted);cursor:pointer;transition:all .2s;text-align:center;}
@@ -154,7 +159,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
         <p id="last-update-text">טוען...</p>
       </div>
     </div>
-    <button class="upload-btn" onclick="openAdmin()">🔐 עדכן</button>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <button class="share-btn" onclick="shareOnTwitter()">𝕏 שתף</button>
+      <button class="upload-btn" onclick="openAdmin()">🔐 עדכן</button>
+    </div>
   </div>
   <div class="stats-row">
     <div class="stat-card">
@@ -168,6 +176,22 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
     <div class="stat-card">
       <div class="stat-value accent-yellow" id="stat-scorer" style="font-size:12px;padding-top:5px">בן שהר</div>
       <div class="stat-label">מלך שערים</div>
+    </div>
+  </div>
+  <div class="wdl-card">
+    <div class="wdl-item">
+      <div class="stat-value" style="color:var(--green)" id="stat-wins">-</div>
+      <div class="stat-label">ניצחונות</div>
+    </div>
+    <div class="wdl-sep"></div>
+    <div class="wdl-item">
+      <div class="stat-value" style="color:var(--yellow)" id="stat-draws">-</div>
+      <div class="stat-label">תיקו</div>
+    </div>
+    <div class="wdl-sep"></div>
+    <div class="wdl-item">
+      <div class="stat-value" style="color:var(--red)" id="stat-losses">-</div>
+      <div class="stat-label">הפסדים</div>
     </div>
   </div>
 </div>
@@ -307,6 +331,25 @@ function updateStats() {
   const sc0 = state.scorers[0]?.name||'';
   const scEl = document.getElementById('stat-scorer');
   scEl.textContent = sc0; scEl.style.fontSize = sc0.length>8?'11px':'12px';
+  let w=0, d=0, l=0;
+  state.matches.forEach(m => {
+    const r = getResult(m);
+    if (r.cls==='win') w++;
+    else if (r.cls==='loss') l++;
+    else if (r.cls==='draw') d++;
+  });
+  document.getElementById('stat-wins').textContent = w;
+  document.getElementById('stat-draws').textContent = d;
+  document.getElementById('stat-losses').textContent = l;
+}
+
+function shareOnTwitter() {
+  const total = state.matches.length;
+  const w = document.getElementById('stat-wins').textContent;
+  const d = document.getElementById('stat-draws').textContent;
+  const l = document.getElementById('stat-losses').textContent;
+  const text = `צפיתי ב-${total} משחקים של הפועל באר שבע! 🔴⚫\n${w} ניצחונות | ${d} תיקו | ${l} הפסדים\nstav-hbs.vercel.app`;
+  window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(text), '_blank');
 }
 
 // ── MATCH RESULT HELPERS ──────────────────────────────────────────────────────
