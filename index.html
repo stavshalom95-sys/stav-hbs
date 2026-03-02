@@ -237,7 +237,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
     </div>
     <div class="section">
       <div class="section-title"><span class="dot" style="background:var(--yellow)"></span>אחוז הצלחה לפי איצטדיון</div>
-      <div class="chart-card" id="chart-stadium-success"></div>
+      <select class="filter-select" id="stadium-success-select" onchange="showStadiumSuccess(this.value)" style="width:100%;margin-bottom:12px;display:block">
+        <option value="">-- בחר איצטדיון --</option>
+      </select>
+      <div id="stadium-success-card"></div>
     </div>
     <div class="section">
       <div class="section-title"><span class="dot" style="background:#f472b6"></span>שופטים מובילים</div>
@@ -509,7 +512,7 @@ function renderBar(elId, data, colorFn, labelKey, showAvg=false) {
   }).join('');
 }
 
-function renderStadiumSuccessStats() {
+function buildStadiumSuccessMap() {
   const stadMap = {};
   state.matches.forEach(m => {
     const hasBs = m.home === MY_TEAM || m.away === MY_TEAM;
@@ -522,25 +525,57 @@ function renderStadiumSuccessStats() {
     else if (r.cls === 'loss') stadMap[m.stadium].l++;
     else stadMap[m.stadium].d++;
   });
-  const data = Object.entries(stadMap)
-    .map(([name, s]) => {
-      const total = s.w + s.d + s.l;
-      const pts = s.w * 3 + s.d;
-      const pct = total > 0 ? Math.round((pts / (total * 3)) * 100) : 0;
-      return { name, w: s.w, d: s.d, l: s.l, total, pts, pct };
-    })
-    .sort((a, b) => b.pct - a.pct || b.total - a.total);
-  const el = document.getElementById('chart-stadium-success');
-  if (!el) return;
-  el.innerHTML = data.map(d => {
-    const color = d.pct >= 60 ? '#10d98a' : d.pct >= 40 ? '#ffd32a' : '#ff4757';
-    const barW = Math.max(8, d.pct);
-    return `<div class="bar-row">
-      <div class="bar-label" title="${d.name}">${d.name}</div>
-      <div class="bar-track"><div class="bar-fill" style="width:${barW}%;background:${color}"><span class="bar-val">${d.pct}%</span></div></div>
-      <div class="bar-avg" style="width:80px">${d.w}נ&nbsp;${d.d}ת&nbsp;${d.l}ה</div>
+  return stadMap;
+}
+
+function initStadiumSuccessSelect() {
+  const stadMap = buildStadiumSuccessMap();
+  const sel = document.getElementById('stadium-success-select');
+  const sorted = Object.entries(stadMap).sort((a,b) => (b[1].w+b[1].d+b[1].l) - (a[1].w+a[1].d+a[1].l));
+  sel.innerHTML = '<option value="">-- בחר איצטדיון --</option>' +
+    sorted.map(([name, s]) => {
+      const total = s.w+s.d+s.l;
+      return `<option value="${name.replace(/"/g,'&quot;')}">${name} (${total} משחקים)</option>`;
+    }).join('');
+}
+
+function showStadiumSuccess(name) {
+  const el = document.getElementById('stadium-success-card');
+  if (!name) { el.innerHTML = ''; return; }
+  const stadMap = buildStadiumSuccessMap();
+  const s = stadMap[name];
+  if (!s) { el.innerHTML = ''; return; }
+  const total = s.w + s.d + s.l;
+  const pts = s.w * 3 + s.d;
+  const maxPts = total * 3;
+  const pct = maxPts > 0 ? Math.round((pts / maxPts) * 100) : 0;
+  const color = pct >= 60 ? '#10d98a' : pct >= 40 ? '#ffd32a' : '#ff4757';
+  el.innerHTML = `
+    <div style="padding:16px">
+      <div style="font-size:17px;font-weight:900;margin-bottom:14px">🏟 ${name}</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px">
+        <div style="text-align:center;background:var(--surface2);border-radius:10px;padding:10px">
+          <div style="font-size:26px;font-weight:900;color:var(--green)">${s.w}</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:3px">ניצחונות</div>
+        </div>
+        <div style="text-align:center;background:var(--surface2);border-radius:10px;padding:10px">
+          <div style="font-size:26px;font-weight:900;color:var(--yellow)">${s.d}</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:3px">תיקו</div>
+        </div>
+        <div style="text-align:center;background:var(--surface2);border-radius:10px;padding:10px">
+          <div style="font-size:26px;font-weight:900;color:var(--red)">${s.l}</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:3px">הפסדים</div>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px">
+        <span style="color:var(--muted)">אחוז הצלחה</span>
+        <span style="font-weight:900;color:${color}">${pct}%</span>
+      </div>
+      <div style="background:var(--surface2);border-radius:20px;height:22px;overflow:hidden">
+        <div style="width:${Math.max(4,pct)}%;height:100%;background:${color};border-radius:20px"></div>
+      </div>
+      <div style="margin-top:10px;font-size:11px;color:var(--muted);text-align:center">${pts} נקודות מתוך ${maxPts} אפשריות</div>
     </div>`;
-  }).join('');
 }
 
 function renderCharts() {
@@ -550,7 +585,7 @@ function renderCharts() {
   renderBar('chart-referees', state.referees, ()=>'#f472b6', 'name');
   renderBar('chart-home', state.homeTeams, ()=>'#34d399', 'name');
   renderBar('chart-away', state.awayTeams, ()=>'#fb923c', 'name');
-  renderStadiumSuccessStats();
+  initStadiumSuccessSelect();
 }
 
 // ── SCORERS ───────────────────────────────────────────────────────────────────
