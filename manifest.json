@@ -1,0 +1,18 @@
+{
+  "name": "משחקים סתיו – הפועל באר שבע",
+  "short_name": "משחקים סתיו",
+  "description": "מעקב אחר כל המשחקים של הפועל באר שבע שצפיתי בהם מאז 2017",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0f",
+  "theme_color": "#0a0a0f",
+  "orientation": "portrait",
+  "lang": "he",
+  "icons": [
+    {
+      "src": "https://raw.githubusercontent.com/stavshalom95-sys/stav-hbs/main/preview.png",
+      "sizes": "any",
+      "type": "image/png"
+    }
+  ]
+}
