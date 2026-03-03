@@ -533,7 +533,7 @@ function buildMatchCard(m, i) {
       <div class="detail-item"><div class="detail-label">📅 שעה</div><div class="detail-value">${m.time||'-'}</div></div>
       <div class="detail-item"><div class="detail-label">📌 מסגרת</div><div class="detail-value" style="font-size:11px">${fw}</div></div>
     </div>
-    <div style="width:100%;aspect-ratio:16/9;overflow:hidden;border-radius:10px;margin-bottom:8px;background:#1c1c26"><img src="https://raw.githubusercontent.com/stavshalom95-sys/stav-hbs/main/photos/${m.date}.jpg" data-fallback="${STADIUM_IMAGES[m.stadium]||''}" alt="" style="width:100%;height:100%;object-fit:cover" onerror="handleImgFallback(this)"></div>
+    <div style="width:100%;height:150px;overflow:hidden;border-radius:10px;margin-bottom:8px;background:#1c1c26"><img src="https://raw.githubusercontent.com/stavshalom95-sys/stav-hbs/main/photos/${m.date}.jpg" data-fallback="${STADIUM_IMAGES[m.stadium]||''}" alt="" style="width:100%;height:100%;object-fit:cover" onerror="handleImgFallback(this)"></div>
     ${hasScorers ? `<div class="detail-full"><div class="detail-label">⚽ כובשים לב"ש</div><div class="detail-value">${m.scorers}</div></div>` : ''}
     ${hasBonus ? `<div class="bonus-box"><span class="star">⭐</span><span class="text">${m.bonus}</span></div>` : ''}
   `;
@@ -670,7 +670,7 @@ function showStadiumSuccess(name) {
   const stadImg = STADIUM_IMAGES[name];
   el.innerHTML = `
     <div style="padding:16px">
-      ${stadImg ? `<div style="width:100%;aspect-ratio:16/9;overflow:hidden;border-radius:10px;margin-bottom:14px;background:#1c1c26"><img src="${stadImg}" alt="${name}" style="width:100%;height:100%;object-fit:cover" onerror="this.parentElement.style.display='none'"></div>` : ''}
+      ${stadImg ? `<div style="width:100%;height:150px;overflow:hidden;border-radius:10px;margin-bottom:14px;background:#1c1c26"><img src="${stadImg}" alt="${name}" style="width:100%;height:100%;object-fit:cover" onerror="this.parentElement.style.display='none'"></div>` : ''}
       <div style="font-size:17px;font-weight:900;margin-bottom:14px">🏟 ${name}</div>
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px">
         <div style="text-align:center;background:var(--surface2);border-radius:10px;padding:10px">
@@ -776,7 +776,7 @@ function handleFile(input) {
       const matches=[];
       for(let i=1;i<rows.length;i++){
         const r=rows[i]; if(!r[0]) continue;
-        const dv=r[2]; const ds=dv instanceof Date?dv.toISOString().split('T')[0]:String(dv||'');
+        const dv=r[2]; const ds=dv instanceof Date?`${dv.getFullYear()}-${String(dv.getMonth()+1).padStart(2,'0')}-${String(dv.getDate()).padStart(2,'0')}`:String(dv||'');
         const tv=r[4]; const ts=tv instanceof Date?tv.toTimeString().slice(0,5):String(tv||'');
         matches.push({home:String(r[0]||''),away:String(r[1]||''),date:ds,day:String(r[3]||''),
           time:ts,framework:String(r[5]||''),round:String(r[6]||''),result:String(r[7]||''),
@@ -897,7 +897,7 @@ async function handleAdminUpload() {
       const matches=[];
       for(let i=1;i<rows.length;i++){
         const r=rows[i]; if(!r[0]) continue;
-        const dv=r[2]; const ds=dv instanceof Date?dv.toISOString().split('T')[0]:String(dv||'');
+        const dv=r[2]; const ds=dv instanceof Date?`${dv.getFullYear()}-${String(dv.getMonth()+1).padStart(2,'0')}-${String(dv.getDate()).padStart(2,'0')}`:String(dv||'');
         const tv=r[4]; const ts=tv instanceof Date?tv.toTimeString().slice(0,5):String(tv||'');
         matches.push({home:String(r[0]||''),away:String(r[1]||''),date:ds,day:String(r[3]||''),
           time:ts,framework:String(r[5]||''),round:String(r[6]||''),result:String(r[7]||''),
