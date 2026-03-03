@@ -487,6 +487,12 @@ function getResult(m) {
   return {cls:'draw',badge:'D'};
 }
 
+function handleImgFallback(img) {
+  const fb = img.dataset.fallback;
+  img.removeAttribute('data-fallback');
+  if (fb) { img.src = fb; } else { img.parentElement.style.display = 'none'; }
+}
+
 function teamLogo(name) {
   const url = TEAM_LOGOS[name];
   if (!url) return '';
@@ -527,7 +533,7 @@ function buildMatchCard(m, i) {
       <div class="detail-item"><div class="detail-label">📅 שעה</div><div class="detail-value">${m.time||'-'}</div></div>
       <div class="detail-item"><div class="detail-label">📌 מסגרת</div><div class="detail-value" style="font-size:11px">${fw}</div></div>
     </div>
-    ${STADIUM_IMAGES[m.stadium] ? `<img src="${STADIUM_IMAGES[m.stadium]}" alt="${m.stadium}" style="width:100%;height:110px;object-fit:cover;border-radius:10px;margin-bottom:8px" onerror="this.style.display='none'">` : ''}
+    <div style="width:100%;aspect-ratio:16/9;overflow:hidden;border-radius:10px;margin-bottom:8px;background:#1c1c26"><img src="https://raw.githubusercontent.com/stavshalom95-sys/stav-hbs/main/photos/${m.date}.jpg" data-fallback="${STADIUM_IMAGES[m.stadium]||''}" alt="" style="width:100%;height:100%;object-fit:cover" onerror="handleImgFallback(this)"></div>
     ${hasScorers ? `<div class="detail-full"><div class="detail-label">⚽ כובשים לב"ש</div><div class="detail-value">${m.scorers}</div></div>` : ''}
     ${hasBonus ? `<div class="bonus-box"><span class="star">⭐</span><span class="text">${m.bonus}</span></div>` : ''}
   `;
@@ -664,7 +670,7 @@ function showStadiumSuccess(name) {
   const stadImg = STADIUM_IMAGES[name];
   el.innerHTML = `
     <div style="padding:16px">
-      ${stadImg ? `<img src="${stadImg}" alt="${name}" style="width:100%;height:140px;object-fit:cover;border-radius:10px;margin-bottom:14px" onerror="this.style.display='none'">` : ''}
+      ${stadImg ? `<div style="width:100%;aspect-ratio:16/9;overflow:hidden;border-radius:10px;margin-bottom:14px;background:#1c1c26"><img src="${stadImg}" alt="${name}" style="width:100%;height:100%;object-fit:cover" onerror="this.parentElement.style.display='none'"></div>` : ''}
       <div style="font-size:17px;font-weight:900;margin-bottom:14px">🏟 ${name}</div>
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px">
         <div style="text-align:center;background:var(--surface2);border-radius:10px;padding:10px">
