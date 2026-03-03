@@ -500,8 +500,10 @@ function teamLogo(name) {
 }
 
 function formatDate(s) {
-  const d=new Date(s); if(isNaN(d)) return s;
-  return d.toLocaleDateString('he-IL',{day:'2-digit',month:'2-digit',year:'2-digit'});
+  if(!s) return s;
+  const str=String(s);
+  if(/^\d{4}-\d{2}-\d{2}$/.test(str)) return str.slice(8)+'/'+str.slice(5,7)+'/'+str.slice(2,4);
+  const d=new Date(str); return isNaN(d)?str:d.toLocaleDateString('he-IL',{day:'2-digit',month:'2-digit',year:'2-digit'});
 }
 
 // ── MATCH CARDS ───────────────────────────────────────────────────────────────
@@ -760,7 +762,7 @@ function handleFile(input) {
   const reader=new FileReader();
   reader.onload=e=>{
     try {
-      const wb=XLSX.read(e.target.result,{type:'binary',cellDates:true});
+      const wb=XLSX.read(e.target.result,{type:'binary'});
       const find=(...names)=>{ for(const n of names) if(wb.Sheets[n]) return wb.Sheets[n]; return null; };
       const parseStats=(ws,header)=>{
         if(!ws) return [];
@@ -776,7 +778,7 @@ function handleFile(input) {
       const matches=[];
       for(let i=1;i<rows.length;i++){
         const r=rows[i]; if(!r[0]) continue;
-        const dv=r[2]; const ds=dv instanceof Date?`${dv.getFullYear()}-${String(dv.getMonth()+1).padStart(2,'0')}-${String(dv.getDate()).padStart(2,'0')}`:String(dv||'');
+        const dv=r[2]; let ds=''; if(typeof dv==='number'&&dv>0){const p=XLSX.SSF.parse_date_code(dv);ds=p?`${p.y}-${String(p.m).padStart(2,'0')}-${String(p.d).padStart(2,'0')}`:'';} else if(dv instanceof Date){ds=`${dv.getFullYear()}-${String(dv.getMonth()+1).padStart(2,'0')}-${String(dv.getDate()).padStart(2,'0')}`;} else {ds=String(dv||'');}
         const tv=r[4]; const ts=tv instanceof Date?tv.toTimeString().slice(0,5):String(tv||'');
         matches.push({home:String(r[0]||''),away:String(r[1]||''),date:ds,day:String(r[3]||''),
           time:ts,framework:String(r[5]||''),round:String(r[6]||''),result:String(r[7]||''),
@@ -882,7 +884,7 @@ async function handleAdminUpload() {
   const reader = new FileReader();
   reader.onload = async (e) => {
     try {
-      const wb = XLSX.read(e.target.result,{type:'binary',cellDates:true});
+      const wb = XLSX.read(e.target.result,{type:'binary'});
       const find=(...names)=>{ for(const n of names) if(wb.Sheets[n]) return wb.Sheets[n]; return null; };
       const parseStats=(ws,header)=>{
         if(!ws) return [];
@@ -897,7 +899,7 @@ async function handleAdminUpload() {
       const matches=[];
       for(let i=1;i<rows.length;i++){
         const r=rows[i]; if(!r[0]) continue;
-        const dv=r[2]; const ds=dv instanceof Date?`${dv.getFullYear()}-${String(dv.getMonth()+1).padStart(2,'0')}-${String(dv.getDate()).padStart(2,'0')}`:String(dv||'');
+        const dv=r[2]; let ds=''; if(typeof dv==='number'&&dv>0){const p=XLSX.SSF.parse_date_code(dv);ds=p?`${p.y}-${String(p.m).padStart(2,'0')}-${String(p.d).padStart(2,'0')}`:'';} else if(dv instanceof Date){ds=`${dv.getFullYear()}-${String(dv.getMonth()+1).padStart(2,'0')}-${String(dv.getDate()).padStart(2,'0')}`;} else {ds=String(dv||'');}
         const tv=r[4]; const ts=tv instanceof Date?tv.toTimeString().slice(0,5):String(tv||'');
         matches.push({home:String(r[0]||''),away:String(r[1]||''),date:ds,day:String(r[3]||''),
           time:ts,framework:String(r[5]||''),round:String(r[6]||''),result:String(r[7]||''),
