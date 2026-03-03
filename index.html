@@ -537,7 +537,7 @@ function buildMatchCard(m, i) {
     </div>
     ${hasScorers ? `<div class="detail-full"><div class="detail-label">⚽ כובשים לב"ש</div><div class="detail-value">${m.scorers}</div></div>` : ''}
     ${hasBonus ? `<div class="bonus-box"><span class="star">⭐</span><span class="text">${m.bonus}</span></div>` : ''}
-    <div style="width:50%;aspect-ratio:1/1;overflow:hidden;border-radius:10px;margin:8px auto 0;background:#1c1c26"><img src="https://raw.githubusercontent.com/stavshalom95-sys/stav-hbs/main/photos/${m.date}.jpg" data-fallback="${STADIUM_IMAGES[m.stadium]||''}" alt="" style="width:100%;height:100%;object-fit:cover" onerror="handleImgFallback(this)"></div>
+    <div style="width:100%;height:150px;overflow:hidden;border-radius:10px;margin-top:8px;background:#1c1c26"><img src="https://raw.githubusercontent.com/stavshalom95-sys/stav-hbs/main/photos/${m.date}.jpg" data-fallback="${STADIUM_IMAGES[m.stadium]||''}" alt="" style="width:100%;height:100%;object-fit:cover" onerror="handleImgFallback(this)"></div>
   `;
 
   return `<div class="match-card ${r.cls}" style="animation-delay:${delay}s" onclick="toggleCard(this)">
@@ -779,7 +779,7 @@ function handleFile(input) {
       for(let i=1;i<rows.length;i++){
         const r=rows[i]; if(!r[0]) continue;
         const dv=r[2]; let ds=''; if(typeof dv==='number'&&dv>0){const p=XLSX.SSF.parse_date_code(dv);ds=p?`${p.y}-${String(p.m).padStart(2,'0')}-${String(p.d).padStart(2,'0')}`:'';} else if(dv instanceof Date){ds=`${dv.getFullYear()}-${String(dv.getMonth()+1).padStart(2,'0')}-${String(dv.getDate()).padStart(2,'0')}`;} else {ds=String(dv||'');}
-        const tv=r[4]; const ts=tv instanceof Date?tv.toTimeString().slice(0,5):String(tv||'');
+        const tv=r[4]; const ts=typeof tv==='number'?`${String(Math.floor(tv*24)).padStart(2,'0')}:${String(Math.round(tv*1440%60)).padStart(2,'0')}`:tv instanceof Date?tv.toTimeString().slice(0,5):String(tv||'');
         matches.push({home:String(r[0]||''),away:String(r[1]||''),date:ds,day:String(r[3]||''),
           time:ts,framework:String(r[5]||''),round:String(r[6]||''),result:String(r[7]||''),
           stadium:String(r[8]||''),attendance:typeof r[9]==='number'?Math.round(r[9]):0,
@@ -900,7 +900,7 @@ async function handleAdminUpload() {
       for(let i=1;i<rows.length;i++){
         const r=rows[i]; if(!r[0]) continue;
         const dv=r[2]; let ds=''; if(typeof dv==='number'&&dv>0){const p=XLSX.SSF.parse_date_code(dv);ds=p?`${p.y}-${String(p.m).padStart(2,'0')}-${String(p.d).padStart(2,'0')}`:'';} else if(dv instanceof Date){ds=`${dv.getFullYear()}-${String(dv.getMonth()+1).padStart(2,'0')}-${String(dv.getDate()).padStart(2,'0')}`;} else {ds=String(dv||'');}
-        const tv=r[4]; const ts=tv instanceof Date?tv.toTimeString().slice(0,5):String(tv||'');
+        const tv=r[4]; const ts=typeof tv==='number'?`${String(Math.floor(tv*24)).padStart(2,'0')}:${String(Math.round(tv*1440%60)).padStart(2,'0')}`:tv instanceof Date?tv.toTimeString().slice(0,5):String(tv||'');
         matches.push({home:String(r[0]||''),away:String(r[1]||''),date:ds,day:String(r[3]||''),
           time:ts,framework:String(r[5]||''),round:String(r[6]||''),result:String(r[7]||''),
           stadium:String(r[8]||''),attendance:typeof r[9]==='number'?Math.round(r[9]):0,
