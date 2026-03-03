@@ -357,6 +357,22 @@ const TEAM_LOGOS = {
   'אחי נצרת': 'https://raw.githubusercontent.com/stavshalom95-sys/stav-hbs/main/logos/ahi-nazareth.png',
 };
 
+const STADIUM_IMAGES = {
+  'טרנר': 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/%D7%90%D7%A6%D7%98%D7%93%D7%99%D7%95%D7%9F_%D7%98%D7%95%D7%98%D7%95_%D7%91%D7%90%D7%A8_%D7%A9%D7%91%D7%A2_%D7%A2%22%D7%A9_%D7%99%D7%A2%D7%A7%D7%91_%D7%98%D7%A8%D7%A0%D7%A8_-_panoramio.jpg/960px-%D7%90%D7%A6%D7%98%D7%93%D7%99%D7%95%D7%9F_%D7%98%D7%95%D7%98%D7%95_%D7%91%D7%90%D7%A8_%D7%A9%D7%91%D7%A2_%D7%A2%22%D7%A9_%D7%99%D7%A2%D7%A7%D7%91_%D7%98%D7%A8%D7%A0%D7%A8_-_panoramio.jpg',
+  'וסרמיל': 'https://upload.wikimedia.org/wikipedia/commons/3/3d/Vasermil_Stadium.jpg',
+  'בלומפילד': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Bloomfield_Stadium%2C_January_2022_-_42.jpg/960px-Bloomfield_Stadium%2C_January_2022_-_42.jpg',
+  'המושבה': 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/YUVAL_CHEN_061121SIXT_03134.jpg/960px-YUVAL_CHEN_061121SIXT_03134.jpg',
+  'סמי עופר': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Sammy_Ofer_Stadium_air.jpg/960px-Sammy_Ofer_Stadium_air.jpg',
+  'טדי': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/TeddyStadiumJerusalem%D9%90Apr172023_03.jpg/960px-TeddyStadiumJerusalem%D9%90Apr172023_03.jpg',
+  'רמת גן': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Ramat_Gan_Ramat_Gan_Stadium_3.jpg/960px-Ramat_Gan_Ramat_Gan_Stadium_3.jpg',
+  'נתניה': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/WikiAir_IL-13-05_A18.JPG/960px-WikiAir_IL-13-05_A18.JPG',
+  'וומבלי': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/London_Wembley.jpg/960px-London_Wembley.jpg',
+  'קאמפ נואו': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Camp_Nou_aerial.jpg/960px-Camp_Nou_aerial.jpg',
+  'אנפילד': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Panorama_of_Anfield_with_new_main_stand_%2829676137824%29.jpg/960px-Panorama_of_Anfield_with_new_main_stand_%2829676137824%29.jpg',
+  'Feyenoord Stadium': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Feyenoord_Rotterdam%27s_De_Kuip_stadium_in_2022_before_a_match_against_FC_Emmen.jpg/960px-Feyenoord_Rotterdam%27s_De_Kuip_stadium_in_2022_before_a_match_against_FC_Emmen.jpg',
+  'Selhurst Park': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/2023_09_09_arne_mueseler_17_18_07_00743-Verbessert-RR_%2853283239217%29.jpg/960px-2023_09_09_arne_mueseler_17_18_07_00743-Verbessert-RR_%2853283239217%29.jpg',
+};
+
 const FW_COLORS ={"ליגת העל":"#4f7dff","גביע המדינה":"#10d98a","גביע הטוטו":"#ffd32a","ליגה לאומית":"#a78bfa","מוקדמות קונפרנס ליג":"#fb923c","מוקדמות ליגת אלופות":"#38bdf8","מוקדמות ליגה אירופית":"#f472b6","מוקדמות מונדיאל":"#34d399","גביע טוטו לאומית":"#fbbf24"};
 const fwColor = n => FW_COLORS[n] || "#6b6b80";
 
@@ -479,6 +495,7 @@ function buildMatchCard(m, i) {
       <div class="detail-item"><div class="detail-label">📅 שעה</div><div class="detail-value">${m.time||'-'}</div></div>
       <div class="detail-item"><div class="detail-label">📌 מסגרת</div><div class="detail-value" style="font-size:11px">${fw}</div></div>
     </div>
+    ${STADIUM_IMAGES[m.stadium] ? `<img src="${STADIUM_IMAGES[m.stadium]}" alt="${m.stadium}" style="width:100%;height:110px;object-fit:cover;border-radius:10px;margin-bottom:8px" onerror="this.style.display='none'">` : ''}
     ${hasScorers ? `<div class="detail-full"><div class="detail-label">⚽ כובשים לב"ש</div><div class="detail-value">${m.scorers}</div></div>` : ''}
     ${hasBonus ? `<div class="bonus-box"><span class="star">⭐</span><span class="text">${m.bonus}</span></div>` : ''}
   `;
@@ -612,8 +629,10 @@ function showStadiumSuccess(name) {
   const maxPts = total * 3;
   const pct = maxPts > 0 ? Math.round((pts / maxPts) * 100) : 0;
   const color = pct >= 60 ? '#10d98a' : pct >= 40 ? '#ffd32a' : '#ff4757';
+  const stadImg = STADIUM_IMAGES[name];
   el.innerHTML = `
     <div style="padding:16px">
+      ${stadImg ? `<img src="${stadImg}" alt="${name}" style="width:100%;height:140px;object-fit:cover;border-radius:10px;margin-bottom:14px" onerror="this.style.display='none'">` : ''}
       <div style="font-size:17px;font-weight:900;margin-bottom:14px">🏟 ${name}</div>
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px">
         <div style="text-align:center;background:var(--surface2);border-radius:10px;padding:10px">
