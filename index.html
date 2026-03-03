@@ -533,9 +533,9 @@ function buildMatchCard(m, i) {
       <div class="detail-item"><div class="detail-label">📅 שעה</div><div class="detail-value">${m.time||'-'}</div></div>
       <div class="detail-item"><div class="detail-label">📌 מסגרת</div><div class="detail-value" style="font-size:11px">${fw}</div></div>
     </div>
-    <div style="width:100%;height:150px;overflow:hidden;border-radius:10px;margin-bottom:8px;background:#1c1c26"><img src="https://raw.githubusercontent.com/stavshalom95-sys/stav-hbs/main/photos/${m.date}.jpg" data-fallback="${STADIUM_IMAGES[m.stadium]||''}" alt="" style="width:100%;height:100%;object-fit:cover" onerror="handleImgFallback(this)"></div>
     ${hasScorers ? `<div class="detail-full"><div class="detail-label">⚽ כובשים לב"ש</div><div class="detail-value">${m.scorers}</div></div>` : ''}
     ${hasBonus ? `<div class="bonus-box"><span class="star">⭐</span><span class="text">${m.bonus}</span></div>` : ''}
+    <div style="width:50%;aspect-ratio:1/1;overflow:hidden;border-radius:10px;margin:8px auto 0;background:#1c1c26"><img src="https://raw.githubusercontent.com/stavshalom95-sys/stav-hbs/main/photos/${m.date}.jpg" data-fallback="${STADIUM_IMAGES[m.stadium]||''}" alt="" style="width:100%;height:100%;object-fit:cover" onerror="handleImgFallback(this)"></div>
   `;
 
   return `<div class="match-card ${r.cls}" style="animation-delay:${delay}s" onclick="toggleCard(this)">
