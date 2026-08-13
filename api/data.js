@@ -1,60 +1,87 @@
+// api/data.js - Vercel Serverless Function
+import { parseWorkbook } from "./_lib/parseWorkbook.js";
+
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
 
-  if (req.method === "OPTIONS") return res.status(200).end();
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
+  }
 
   const SUPABASE_URL   = process.env.SUPABASE_URL;
   const SUPABASE_KEY   = process.env.SUPABASE_KEY;
   const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
-
-  // Debug — log what env vars we have (without exposing values)
-  console.log("ENV CHECK:", {
-    hasUrl: !!SUPABASE_URL,
-    hasKey: !!SUPABASE_KEY,
-    hasPass: !!ADMIN_PASSWORD,
-    urlStart: SUPABASE_URL ? SUPABASE_URL.slice(0,30) : "MISSING",
-    keyStart: SUPABASE_KEY ? SUPABASE_KEY.slice(0,20) : "MISSING",
-  });
+  const SHEET_XLSX_URL = process.env.SHEET_XLSX_URL;
 
   if (!SUPABASE_URL || !SUPABASE_KEY) {
-    return res.status(500).json({ error: "חסרים משתני סביבה", hasUrl: !!SUPABASE_URL, hasKey: !!SUPABASE_KEY });
+    return res.status(500).json({ error: "חסרים: SUPABASE_URL, SUPABASE_KEY" });
   }
 
-  // Make sure URL doesn't have trailing slash
   const baseUrl = SUPABASE_URL.replace(/\/$/, "");
   const tableUrl = `${baseUrl}/rest/v1/football_data`;
-
   const sbHeaders = {
     "apikey": SUPABASE_KEY,
     "Authorization": `Bearer ${SUPABASE_KEY}`,
     "Content-Type": "application/json",
   };
 
+  async function readCache() {
+    const response = await fetch(`${tableUrl}?id=eq.1&select=data`, { headers: sbHeaders });
+    if (!response.ok) throw new Error(`Supabase GET ${response.status}: ${await response.text()}`);
+    const rows = await response.json();
+    return rows && rows[0] ? rows[0].data : null;
+  }
+
+  async function writeCache(data) {
+    const response = await fetch(tableUrl, {
+      method: "POST",
+      headers: { ...sbHeaders, "Prefer": "resolution=merge-duplicates,return=minimal" },
+      body: JSON.stringify({ id: 1, data }),
+    });
+    if (!response.ok) throw new Error(`Supabase POST failed: ${response.status} ${await response.text()}`);
+  }
+
   // ── GET ──────────────────────────────────────────────────────────────────────
   if (req.method === "GET") {
-    try {
-      console.log("Fetching from:", tableUrl);
-      const response = await fetch(`${tableUrl}?id=eq.1&select=data`, { headers: sbHeaders });
-      const text = await response.text();
-      console.log("Supabase response status:", response.status);
-      console.log("Supabase response body:", text.slice(0, 200));
-
-      if (!response.ok) throw new Error(`Supabase GET ${response.status}: ${text}`);
-
-      const rows = JSON.parse(text);
-      if (!rows || rows.length === 0) {
-        return res.status(404).json({ error: "אין נתונים עדיין" });
+    // No live sheet configured yet — legacy behavior, serve straight from cache.
+    if (!SHEET_XLSX_URL) {
+      try {
+        const cached = await readCache();
+        if (!cached) return res.status(404).json({ error: "אין נתונים עדיין" });
+        return res.status(200).json(cached);
+      } catch (err) {
+        return res.status(500).json({ error: err.message });
       }
-      return res.status(200).json(rows[0].data);
+    }
+
+    // Live sheet configured: pull the workbook fresh on every load, cache it,
+    // and only fall back to the last cached snapshot if the refresh fails —
+    // with the failure surfaced to the client instead of swallowed.
+    try {
+      const sheetRes = await fetch(SHEET_XLSX_URL);
+      if (!sheetRes.ok) throw new Error(`הורדת הגיליון נכשלה (${sheetRes.status})`);
+      const buf = Buffer.from(await sheetRes.arrayBuffer());
+      const parsed = parseWorkbook(buf);
+      parsed.lastUpdated = new Date().toISOString();
+      await writeCache(parsed);
+      return res.status(200).json(parsed);
     } catch (err) {
-      console.error("GET error:", err.message);
+      console.error("Sheet sync failed:", err.message);
+      try {
+        const cached = await readCache();
+        if (cached) {
+          return res.status(200).json({ ...cached, stale: true, staleReason: err.message });
+        }
+      } catch (cacheErr) {
+        console.error("Cache fallback also failed:", cacheErr.message);
+      }
       return res.status(500).json({ error: err.message });
     }
   }
 
-  // ── POST ─────────────────────────────────────────────────────────────────────
+  // ── POST (manual override / backup path) ────────────────────────────────────
   if (req.method === "POST") {
     try {
       const provided = (req.headers["authorization"] || "").replace("Bearer ", "");
@@ -63,25 +90,17 @@ export default async function handler(req, res) {
       }
 
       const body = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
-      if (!body || !body.matches) {
-        return res.status(400).json({ error: "נתונים חסרים" });
-      }
-      body.lastUpdated = new Date().toISOString();
-
-      const response = await fetch(tableUrl, {
-        method: "POST",
-        headers: { ...sbHeaders, "Prefer": "resolution=merge-duplicates,return=minimal" },
-        body: JSON.stringify({ id: 1, data: body }),
-      });
-
-      if (!response.ok) {
-        const txt = await response.text();
-        throw new Error(`Supabase POST failed: ${response.status} ${txt}`);
+      if (!body || !body.fileBase64) {
+        return res.status(400).json({ error: "קובץ חסר" });
       }
 
-      return res.status(200).json({ success: true, count: body.matches.length, lastUpdated: body.lastUpdated });
+      const buf = Buffer.from(body.fileBase64, "base64");
+      const parsed = parseWorkbook(buf);
+      parsed.lastUpdated = new Date().toISOString();
+      await writeCache(parsed);
+
+      return res.status(200).json({ success: true, count: parsed.matches.length, lastUpdated: parsed.lastUpdated });
     } catch (err) {
-      console.error("POST error:", err.message);
       return res.status(500).json({ error: err.message });
     }
   }

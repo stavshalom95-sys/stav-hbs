@@ -22,7 +22,6 @@
 <meta name="twitter:title" content="המשחקים שלי – סתיו 🏟">
 <meta name="twitter:description" content="כל המשחקים שהייתי בהם מאז 2008 – בעיקר הפועל ב״ש, אבל גם משחקים נוספים. 536+ משחקים, תוצאות, איצטדיונים וכובשים">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/stavshalom95-sys/stav-hbs/main/preview.png">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;600;700;900&display=swap');
 :root{
@@ -156,6 +155,9 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .upload-drop p{font-size:13px;font-weight:700;color:var(--accent);margin:0;}
 .upload-drop small{font-size:11px;color:var(--muted);}
 .modal-close{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px;width:100%;font-size:13px;font-weight:700;color:var(--muted);font-family:var(--font);cursor:pointer;margin-top:8px;}
+.stale-banner{display:none;align-items:center;justify-content:center;gap:8px;background:rgba(255,211,42,0.12);border-bottom:1px solid rgba(255,211,42,0.35);color:var(--yellow);font-size:12px;font-weight:700;padding:8px 16px;text-align:center;line-height:1.4;}
+.stale-banner.show{display:flex;}
+.stale-banner button{background:none;border:none;color:var(--yellow);font-size:12px;font-weight:900;cursor:pointer;text-decoration:underline;flex-shrink:0;font-family:var(--font);}
 .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--surface);border:1px solid var(--green);border-radius:12px;padding:10px 20px;font-size:13px;font-weight:700;color:var(--green);z-index:300;transition:transform .3s cubic-bezier(.16,1,.3,1);white-space:nowrap;}
 .toast.show{transform:translateX(-50%) translateY(0);}
 .empty{text-align:center;padding:40px;color:var(--muted);}
@@ -164,6 +166,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 </style>
 </head>
 <body>
+
+<div class="stale-banner" id="stale-banner">
+  ⚠️ <span id="stale-banner-text"></span>
+  <button onclick="hideStaleBanner()">הבנתי</button>
+</div>
 
 <div class="header">
   <div class="header-top">
@@ -284,8 +291,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 <!-- ADMIN PANEL -->
 <div class="upload-overlay" id="admin-overlay" onclick="if(event.target===this)closeAdmin()">
   <div class="upload-modal">
-    <h2>🔐 עדכון נתונים</h2>
-    <p>רק מנהל יכול לעדכן. הנתונים יתעדכנו לכל המשתמשים מיד.</p>
+    <h2>🔐 עדכון ידני</h2>
+    <p>הדשבורד מתעדכן אוטומטית מהגיליון בכל טעינה. השתמשו כאן רק לעקיפה ידנית של הגיליון החי.</p>
     <div style="margin-bottom:12px">
       <input type="password" id="admin-password" placeholder="סיסמת אדמין" dir="rtl"
         style="width:100%;background:#1c1c26;border:1px solid #2a2a38;border-radius:10px;padding:10px 12px;font-size:14px;font-family:Heebo,sans-serif;color:#e8e8f0;margin-bottom:10px;outline:none;display:block;">
@@ -755,81 +762,6 @@ function clearFilters() {
   applyFilters();
 }
 
-// ── EXCEL IMPORT ──────────────────────────────────────────────────────────────
-function handleFile(input) {
-  const file=input.files[0]; if(!file) return;
-  closeUpload(); showToast('⏳ מעבד קובץ...');
-  const reader=new FileReader();
-  reader.onload=e=>{
-    try {
-      const wb=XLSX.read(e.target.result,{type:'binary'});
-      const find=(...names)=>{ for(const n of names) if(wb.Sheets[n]) return wb.Sheets[n]; return null; };
-      const parseStats=(ws,header)=>{
-        if(!ws) return [];
-        const rows=XLSX.utils.sheet_to_json(ws,{header:1});
-        let start=-1;
-        for(let i=0;i<rows.length;i++) if(String(rows[i][0]||'').trim()===header){start=i+1;break;}
-        if(start===-1) return [];
-        return rows.slice(start).filter(r=>r[0]&&String(r[0])!=='Grand Total');
-      };
-
-      const ws=find('סיכום','summary'); if(!ws) throw new Error('גיליון סיכום לא נמצא');
-      const rows=XLSX.utils.sheet_to_json(ws,{header:1});
-      const matches=[];
-      for(let i=1;i<rows.length;i++){
-        const r=rows[i]; if(!r[0]) continue;
-        const dv=r[2]; let ds=''; if(typeof dv==='number'&&dv>0){const p=XLSX.SSF.parse_date_code(dv);ds=p?`${p.y}-${String(p.m).padStart(2,'0')}-${String(p.d).padStart(2,'0')}`:'';} else if(dv instanceof Date){ds=`${dv.getFullYear()}-${String(dv.getMonth()+1).padStart(2,'0')}-${String(dv.getDate()).padStart(2,'0')}`;} else {ds=String(dv||'');}
-        const tv=r[4]; const ts=typeof tv==='number'?`${String(Math.floor(tv*24)).padStart(2,'0')}:${String(Math.round(tv*1440%60)).padStart(2,'0')}`:tv instanceof Date?tv.toTimeString().slice(0,5):String(tv||'');
-        matches.push({home:String(r[0]||''),away:String(r[1]||''),date:ds,day:String(r[3]||''),
-          time:ts,framework:String(r[5]||''),round:String(r[6]||''),result:String(r[7]||''),
-          stadium:String(r[8]||''),attendance:typeof r[9]==='number'?Math.round(r[9]):0,
-          scorers:String(r[10]||''),referee:String(r[11]||''),bonus:String(r[12]||'')});
-      }
-      matches.sort((a,b)=>b.date.localeCompare(a.date));
-
-      const scorerRows=parseStats(find('מלך שערים','scorers'),'מלך שערים');
-      const scorers=scorerRows.map(r=>{return {name:String(r[0]),goals:Number(r[1]||0)}});
-
-      const stadRows=parseStats(find('איצטדיונים','stadiums'),'איצטדיון');
-      const stadiums=stadRows.map(r=>{return {name:String(r[0]),count:Number(r[1]||0),avg:Math.round(Number(r[2]||0))}});
-
-      const daysRows=parseStats(find('ימים','days'),'יום').filter(r=>String(r[0])!=='Grand Total');
-      const days=daysRows.map(r=>{return {day:String(r[0]),count:Number(r[1]||0)}});
-
-      const fwRows=parseStats(find('מסגרת','framework'),'מסגרת');
-      const frameworks=fwRows.map(r=>{return {name:String(r[0]),count:Number(r[1]||0)}});
-
-      const refRows=parseStats(find('שופטים','referees'),'שופט');
-      const referees=refRows.map(r=>{return {name:String(r[0]),count:Number(r[1]||0)}});
-
-      const homeRows=parseStats(find('קבוצה ביתית','home_teams'),'קבוצה ביתית');
-      const homeTeams=homeRows.map(r=>{return {name:String(r[0]),count:Number(r[1]||0)}});
-
-      const awayRows=parseStats(find('קבוצת חוץ','away_teams'),'קבוצת חוץ');
-      const awayTeams=awayRows.map(r=>{return {name:String(r[0]),count:Number(r[1]||0)}});
-
-      const seasonsMap={};
-      matches.forEach(m=>{
-        const y=parseInt(m.date.slice(0,4)),mo=parseInt(m.date.slice(5,7));
-        const s=mo>=8?y:y-1; const k=`${s}/${String(s+1).slice(2)}`;
-        seasonsMap[k]=(seasonsMap[k]||0)+1;
-      });
-      const seasons=Object.entries(seasonsMap).sort((a,b)=>b[0].localeCompare(a[0]));
-
-      state={matches,seasons,stadiums:stadiums.slice(0,12),scorers,days,
-              frameworks:frameworks.slice(0,10),referees:referees.slice(0,15),
-              homeTeams:homeTeams.slice(0,15),awayTeams:awayTeams.slice(0,15)};
-      // שמור לאחסון מקומי כדי שיישאר גם אחרי רענון
-      try { localStorage.setItem('football_state', JSON.stringify(state)); } catch(e) {}
-      renderAll();
-      showToast(`✅ עודכן! ${matches.length} משחקים`);
-    } catch(err) { showToast('❌ '+err.message); console.error(err); }
-  };
-  reader.readAsBinaryString(file); input.value='';
-}
-
-
-
 function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3000); }
 
 
@@ -847,18 +779,33 @@ async function loadFromCloud() {
       const d = new Date(data.lastUpdated);
       const ds = d.toLocaleDateString('he-IL') + ' ' + d.toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'});
       document.getElementById('last-update-text').textContent = 'עודכן: ' + ds;
-      showToast('✅ נטען מהענן!');
+      if (data.stale) {
+        showStaleBanner(data.staleReason);
+        showToast('⚠️ הסנכרון נכשל, מוצגים נתונים שמורים');
+      } else {
+        hideStaleBanner();
+        showToast('✅ נטען מהענן!');
+      }
     }
   } catch(e) {
     document.getElementById('last-update-text').textContent = 'נתוני ברירת מחדל';
   }
 }
 
-async function uploadToCloud(parsedState, password) {
+function showStaleBanner(reason) {
+  document.getElementById('stale-banner-text').textContent =
+    'הסנכרון האחרון עם הגיליון נכשל — מוצגים הנתונים השמורים האחרונים' + (reason ? ` (${reason})` : '');
+  document.getElementById('stale-banner').classList.add('show');
+}
+function hideStaleBanner() {
+  document.getElementById('stale-banner').classList.remove('show');
+}
+
+async function uploadToCloud(fileBase64, password) {
   const res = await fetch(API_URL, {
     method: 'POST',
     headers: {'Content-Type':'application/json','Authorization':'Bearer '+password},
-    body: JSON.stringify(parsedState)
+    body: JSON.stringify({ fileBase64 })
   });
   const result = await res.json();
   if (!res.ok) throw new Error(result.error || 'שגיאה');
@@ -874,68 +821,27 @@ function closeAdmin() {
   document.getElementById('admin-status').textContent='';
 }
 
+// Manual override / backup path: the XLSX is parsed server-side (same
+// parser the automatic sheet sync uses), so this stays a thin upload.
 async function handleAdminUpload() {
   const password = document.getElementById('admin-password').value.trim();
   const fileInput = document.getElementById('admin-file-input');
   const statusEl = document.getElementById('admin-status');
   if (!password) { statusEl.textContent='❌ נא להזין סיסמה'; return; }
   if (!fileInput.files[0]) { statusEl.textContent='❌ נא לבחור קובץ'; return; }
-  statusEl.textContent='⏳ מעבד קובץ...';
+  statusEl.textContent='⏳ מעלה קובץ...';
   const reader = new FileReader();
   reader.onload = async (e) => {
     try {
-      const wb = XLSX.read(e.target.result,{type:'binary'});
-      const find=(...names)=>{ for(const n of names) if(wb.Sheets[n]) return wb.Sheets[n]; return null; };
-      const parseStats=(ws,header)=>{
-        if(!ws) return [];
-        const rows=XLSX.utils.sheet_to_json(ws,{header:1});
-        let start=-1;
-        for(let i=0;i<rows.length;i++) if(String(rows[i][0]||'').trim()===header){start=i+1;break;}
-        if(start===-1) return [];
-        return rows.slice(start).filter(r=>r[0]&&String(r[0])!=='Grand Total');
-      };
-      const ws=find('סיכום'); if(!ws) throw new Error('גיליון סיכום לא נמצא');
-      const rows=XLSX.utils.sheet_to_json(ws,{header:1});
-      const matches=[];
-      for(let i=1;i<rows.length;i++){
-        const r=rows[i]; if(!r[0]) continue;
-        const dv=r[2]; let ds=''; if(typeof dv==='number'&&dv>0){const p=XLSX.SSF.parse_date_code(dv);ds=p?`${p.y}-${String(p.m).padStart(2,'0')}-${String(p.d).padStart(2,'0')}`:'';} else if(dv instanceof Date){ds=`${dv.getFullYear()}-${String(dv.getMonth()+1).padStart(2,'0')}-${String(dv.getDate()).padStart(2,'0')}`;} else {ds=String(dv||'');}
-        const tv=r[4]; const ts=typeof tv==='number'?`${String(Math.floor(tv*24)).padStart(2,'0')}:${String(Math.round(tv*1440%60)).padStart(2,'0')}`:tv instanceof Date?tv.toTimeString().slice(0,5):String(tv||'');
-        matches.push({home:String(r[0]||''),away:String(r[1]||''),date:ds,day:String(r[3]||''),
-          time:ts,framework:String(r[5]||''),round:String(r[6]||''),result:String(r[7]||''),
-          stadium:String(r[8]||''),attendance:typeof r[9]==='number'?Math.round(r[9]):0,
-          scorers:String(r[10]||''),referee:String(r[11]||''),bonus:String(r[12]||'')});
-      }
-      matches.sort((a,b)=>b.date.localeCompare(a.date));
-      const scorers=parseStats(find('מלך שערים'),'מלך שערים').map(r=>({name:String(r[0]),goals:Number(r[1]||0)}));
-      const stadiums=parseStats(find('איצטדיונים'),'איצטדיון').map(r=>({name:String(r[0]),count:Number(r[1]||0),avg:Math.round(Number(r[2]||0))}));
-      const days=parseStats(find('ימים'),'יום').filter(r=>String(r[0])!=='Grand Total').map(r=>({day:String(r[0]),count:Number(r[1]||0)}));
-      const frameworks=parseStats(find('מסגרת'),'מסגרת').map(r=>({name:String(r[0]),count:Number(r[1]||0)}));
-      const referees=parseStats(find('שופטים'),'שופט').map(r=>({name:String(r[0]),count:Number(r[1]||0)}));
-      const homeTeams=parseStats(find('קבוצה ביתית'),'קבוצה ביתית').map(r=>({name:String(r[0]),count:Number(r[1]||0)}));
-      const awayTeams=parseStats(find('קבוצת חוץ'),'קבוצת חוץ').map(r=>({name:String(r[0]),count:Number(r[1]||0)}));
-      const seasonsMap={};
-      matches.forEach(m=>{
-        const y=parseInt(m.date.slice(0,4)),mo=parseInt(m.date.slice(5,7));
-        const s=mo>=8?y:y-1; const k=`${s}/${String(s+1).slice(2)}`;
-        seasonsMap[k]=(seasonsMap[k]||0)+1;
-      });
-      const seasons=Object.entries(seasonsMap).sort((a,b)=>b[0].localeCompare(a[0]));
-      const newState={matches,seasons,stadiums:stadiums.slice(0,12),scorers,days,
-        frameworks:frameworks.slice(0,10),referees:referees.slice(0,15),
-        homeTeams:homeTeams.slice(0,15),awayTeams:awayTeams.slice(0,15)};
-      statusEl.textContent='⏳ מעלה לענן...';
-      const result=await uploadToCloud(newState,password);
-      state=newState;
-      renderAll();
-      const d=new Date(result.lastUpdated);
-      const ds=d.toLocaleDateString('he-IL')+' '+d.toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'});
-      document.getElementById('last-update-text').textContent='עודכן: '+ds;
+      const fileBase64 = e.target.result.split(',')[1];
+      const result = await uploadToCloud(fileBase64, password);
+      hideStaleBanner();
+      await loadFromCloud();
       statusEl.textContent=`✅ עודכן! ${result.count} משחקים`;
       setTimeout(closeAdmin,2000);
     } catch(err) { statusEl.textContent='❌ '+err.message; }
   };
-  reader.readAsBinaryString(fileInput.files[0]);
+  reader.readAsDataURL(fileInput.files[0]);
 }
 
 renderAll();
