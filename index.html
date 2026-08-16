@@ -51,8 +51,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .share-btn{display:flex;align-items:center;gap:5px;background:none;border:1px solid #1d9bf0;border-radius:10px;padding:7px 11px;color:#1d9bf0;font-size:12px;font-weight:700;font-family:var(--font);cursor:pointer;}
 .share-btn:active{transform:scale(0.97);}
 
-.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:10px 16px;background:var(--bg);position:sticky;top:138px;z-index:90;}
-.tab{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:8px 2px;font-size:11px;font-weight:700;font-family:var(--font);color:var(--muted);cursor:pointer;transition:all .2s;text-align:center;}
+.tabs{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;padding:10px 16px;background:var(--bg);position:sticky;top:138px;z-index:90;}
+.tab{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:8px 2px;font-size:10px;font-weight:700;font-family:var(--font);color:var(--muted);cursor:pointer;transition:all .2s;text-align:center;}
 .tab.active{background:linear-gradient(135deg,var(--accent),var(--accent2));border-color:transparent;color:white;box-shadow:0 4px 16px rgba(79,125,255,0.35);}
 
 .content{padding:12px 16px 100px;}
@@ -143,6 +143,55 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .scorer-bar-fill{height:4px;border-radius:2px;background:linear-gradient(90deg,var(--yellow),var(--accent));}
 .scorer-goals{font-size:15px;font-weight:900;color:var(--yellow);flex-shrink:0;}
 
+/* JOURNEY (streaks / milestones / countries) */
+.hero-card{position:relative;background:linear-gradient(135deg,rgba(79,125,255,0.14),rgba(124,58,237,0.14));border:1px solid rgba(79,125,255,0.35);border-radius:18px;padding:18px;overflow:hidden;margin-bottom:14px;}
+.hero-card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 100% 0%,rgba(124,58,237,0.25),transparent 60%);pointer-events:none;}
+.hero-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;position:relative;}
+.hero-streak{display:flex;align-items:center;gap:8px;}
+.hero-streak .flame{font-size:22px;}
+.hero-streak-text .num{font-size:26px;font-weight:900;line-height:1;}
+.hero-streak-text .lbl{font-size:11px;color:var(--muted);margin-top:2px;}
+.hero-milestone{position:relative;}
+.milestone-track{background:rgba(255,255,255,0.08);border-radius:20px;height:10px;overflow:hidden;margin:8px 0 6px;}
+.milestone-fill{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width 1s cubic-bezier(.16,1,.3,1);}
+.milestone-label{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);}
+.milestone-label b{color:var(--text);font-weight:800;}
+
+.form-pills{display:flex;gap:6px;}
+.form-pill{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;flex-shrink:0;}
+.form-pill.win{background:rgba(16,217,138,0.18);color:var(--green);border:1px solid rgba(16,217,138,0.4);}
+.form-pill.loss{background:rgba(255,71,87,0.18);color:var(--red);border:1px solid rgba(255,71,87,0.4);}
+.form-pill.draw{background:rgba(255,211,42,0.18);color:var(--yellow);border:1px solid rgba(255,211,42,0.4);}
+
+.mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.mini-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px;}
+.mini-card .mini-title{font-size:11px;color:var(--muted);margin-bottom:8px;display:flex;align-items:center;gap:5px;}
+.mini-card .mini-value{font-size:20px;font-weight:900;}
+.mini-card .mini-sub{font-size:11px;color:var(--muted);margin-top:3px;}
+
+.badge-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px;display:flex;align-items:center;gap:12px;margin-bottom:8px;}
+.badge-card .badge-emoji{font-size:26px;flex-shrink:0;width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;}
+.badge-card.nemesis .badge-emoji{background:rgba(255,71,87,0.14);}
+.badge-card.lucky .badge-emoji{background:rgba(16,217,138,0.14);}
+.badge-card .badge-info{flex:1;min-width:0;}
+.badge-card .badge-title{font-size:10px;color:var(--muted);}
+.badge-card .badge-name{font-size:14px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.badge-card .badge-stat{font-size:11px;color:var(--muted);margin-top:2px;}
+
+.flag-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:8px;}
+.flag-chip{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:10px 6px;text-align:center;transition:transform .15s;}
+.flag-chip .flag-emoji{font-size:26px;margin-bottom:4px;}
+.flag-chip .flag-name{font-size:10px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.flag-chip .flag-count{font-size:9px;color:var(--muted);margin-top:1px;}
+.countries-hero{display:flex;align-items:center;justify-content:center;gap:20px;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px;}
+.countries-hero .ch-item{text-align:center;}
+.countries-hero .ch-num{font-size:24px;font-weight:900;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.countries-hero .ch-lbl{font-size:10px;color:var(--muted);margin-top:2px;}
+.countries-hero .ch-sep{width:1px;height:30px;background:var(--border);}
+
+.spark-wrap{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px;}
+.spark-wrap svg{width:100%;height:auto;display:block;}
+
 /* UPLOAD */
 .upload-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);z-index:200;align-items:center;justify-content:center;padding:24px;}
 .upload-overlay.show{display:flex;}
@@ -222,6 +271,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 <div class="tabs">
   <button class="tab active" onclick="switchTab('matches',this)">🏟 משחקים</button>
   <button class="tab" onclick="switchTab('seasons',this)">📅 עונות</button>
+  <button class="tab" onclick="switchTab('journey',this)">🌍 מסע</button>
   <button class="tab" onclick="switchTab('insights',this)">📊 תובנות</button>
   <button class="tab" onclick="switchTab('scorers',this)">⚽ כובשים</button>
 </div>
@@ -283,6 +333,62 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
   <div id="tab-scorers" style="display:none">
     <input type="text" class="scorer-search" id="scorer-search" placeholder="🔍 חפש כובש..." oninput="filterScorers()" dir="rtl">
     <div class="chart-card" id="scorers-list"></div>
+  </div>
+
+  <!-- JOURNEY -->
+  <div id="tab-journey" style="display:none">
+    <div class="hero-card">
+      <div class="hero-top">
+        <div class="hero-streak">
+          <div class="flame" id="journey-streak-flame">🔥</div>
+          <div class="hero-streak-text">
+            <div class="num" id="journey-streak-num">-</div>
+            <div class="lbl" id="journey-streak-lbl">רצף נוכחי</div>
+          </div>
+        </div>
+        <div class="form-pills" id="journey-form-pills"></div>
+      </div>
+      <div class="hero-milestone">
+        <div class="milestone-label"><span>עד למשחק <b id="journey-milestone-next">-</b></span><span id="journey-milestone-togo">-</span></div>
+        <div class="milestone-track"><div class="milestone-fill" id="journey-milestone-fill" style="width:0%"></div></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title"><span class="dot" style="background:var(--green)"></span>בית מול חוץ</div>
+      <div class="mini-grid">
+        <div class="mini-card">
+          <div class="mini-title">🏠 בית</div>
+          <div class="mini-value" id="journey-home-pct">-</div>
+          <div class="mini-sub" id="journey-home-sub"></div>
+        </div>
+        <div class="mini-card">
+          <div class="mini-title">✈️ חוץ</div>
+          <div class="mini-value" id="journey-away-pct">-</div>
+          <div class="mini-sub" id="journey-away-sub"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title"><span class="dot" style="background:var(--accent)"></span>מגמת ניצחונות</div>
+      <div class="spark-wrap" id="journey-sparkline"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title"><span class="dot" style="background:#f472b6"></span>יריב וגמל</div>
+      <div id="journey-badges"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title"><span class="dot" style="background:var(--yellow)"></span>מדינות שביקרתי בהן</div>
+      <div class="countries-hero">
+        <div class="ch-item"><div class="ch-num" id="journey-countries-count">-</div><div class="ch-lbl">מדינות</div></div>
+        <div class="ch-sep"></div>
+        <div class="ch-item"><div class="ch-num" id="journey-foreign-stadiums-count">-</div><div class="ch-lbl">איצטדיונים בחו"ל</div></div>
+      </div>
+      <div class="flag-grid" id="journey-flag-grid"></div>
+    </div>
   </div>
 
 </div>
@@ -434,10 +540,11 @@ function switchTab(id, btn) {
 function renderAll() {
   updateStats(); populateFilters(); renderMatches(state.matches);
   renderSeasons(); renderCharts(); renderScorers(state.scorers);
+  renderJourney();
 }
 
 function updateStats() {
-  document.getElementById('stat-total').textContent = state.matches.length;
+  animateCount(document.getElementById('stat-total'), state.matches.length);
   const s0 = state.stadiums[0]?.name||'';
   const sEl = document.getElementById('stat-stadium');
   sEl.textContent = s0; sEl.style.fontSize = s0.length>5?'12px':'14px';
@@ -451,9 +558,9 @@ function updateStats() {
     else if (r.cls==='loss') l++;
     else if (r.cls==='draw') d++;
   });
-  document.getElementById('stat-wins').textContent = w;
-  document.getElementById('stat-draws').textContent = d;
-  document.getElementById('stat-losses').textContent = l;
+  animateCount(document.getElementById('stat-wins'), w);
+  animateCount(document.getElementById('stat-draws'), d);
+  animateCount(document.getElementById('stat-losses'), l);
 }
 
 function shareOnTwitter() {
@@ -489,9 +596,10 @@ function getResult(m) {
   const myGoals  = myIsHome ? homeGoals : awayGoals;
   const oppGoals = myIsHome ? awayGoals : homeGoals;
 
-  if (myGoals > oppGoals) return {cls:'win',badge:'W'};
-  if (myGoals < oppGoals) return {cls:'loss',badge:'L'};
-  return {cls:'draw',badge:'D'};
+  const base = {isHome:myIsHome, myGoals, oppGoals};
+  if (myGoals > oppGoals) return {cls:'win',badge:'W',...base};
+  if (myGoals < oppGoals) return {cls:'loss',badge:'L',...base};
+  return {cls:'draw',badge:'D',...base};
 }
 
 function handleImgFallback(img) {
@@ -714,6 +822,197 @@ function renderCharts() {
   renderBar('chart-home', state.homeTeams, ()=>'#34d399', 'name', false, true);
   renderBar('chart-away', state.awayTeams, ()=>'#fb923c', 'name', false, true);
   initStadiumSuccessSelect();
+}
+
+// ── JOURNEY (streaks / milestones / countries) ─────────────────────────────────
+// Stadium → country code. Built from the actual stadium list in the sheet and
+// cross-checked against each stadium's real opponent/framework (e.g. "דוחא"
+// turned out to be Bnei Sakhnin's home ground in Israel, not Doha; "מייז'סקי"
+// is Wisła Kraków's Stadion Miejski in Poland) — every entry below was
+// verified this way, not guessed from the name alone.
+const STADIUM_COUNTRY = {
+  'Ciutat de valencia':'ES', 'Cornaredo Stadium':'CH', 'Estadio Alejandro Villanueva':'PE',
+  'Feyenoord Stadium':'NL', 'Kadrioru Staadion':'EE', 'Selhurst Park':'GB',
+  'וומבלי':'GB', 'קאמפ נואו':'ES', 'סנטיאגו ברנבאו':'ES', 'האולימפי ברלין':'DE',
+  'דיסלדורף ארנה':'DE', 'ולטינס ארנה':'DE', 'קאראיסקאקיס':'GR', "א.לה קוק ארנה":'EE',
+  'ארנה נציונאלה':'RO', 'ארדה ארנה':'BG', 'סאו פאולו':'IT', "מייז'סקי":'PL',
+};
+const COUNTRY_META = {
+  IL:{name:'ישראל',flag:'🇮🇱'}, ES:{name:'ספרד',flag:'🇪🇸'}, CH:{name:'שוויץ',flag:'🇨🇭'},
+  PE:{name:'פרו',flag:'🇵🇪'}, NL:{name:'הולנד',flag:'🇳🇱'}, EE:{name:'אסטוניה',flag:'🇪🇪'},
+  GB:{name:'אנגליה',flag:'🇬🇧'}, DE:{name:'גרמניה',flag:'🇩🇪'}, GR:{name:'יוון',flag:'🇬🇷'},
+  RO:{name:'רומניה',flag:'🇷🇴'}, BG:{name:'בולגריה',flag:'🇧🇬'}, IT:{name:'איטליה',flag:'🇮🇹'},
+  PL:{name:'פולין',flag:'🇵🇱'},
+};
+function stadiumCountry(name){ return STADIUM_COUNTRY[name] || 'IL'; }
+
+function computeJourney() {
+  const involved = [];
+  state.matches.forEach(m => {
+    const r = getResult(m);
+    if (r.cls === 'neutral') return;
+    involved.push({m, r});
+  });
+  // state.matches is newest-first; reverse for chronological order
+  const chrono = involved.slice().reverse();
+
+  const wins = involved.filter(x=>x.r.cls==='win').length;
+  const draws = involved.filter(x=>x.r.cls==='draw').length;
+  const losses = involved.filter(x=>x.r.cls==='loss').length;
+
+  let longestWin=0, longestUnbeaten=0, curWin=0, curUnbeaten=0;
+  chrono.forEach(x=>{
+    if(x.r.cls==='win'){curWin++;curUnbeaten++;}
+    else if(x.r.cls==='draw'){curWin=0;curUnbeaten++;}
+    else {curWin=0;curUnbeaten=0;}
+    if(curWin>longestWin) longestWin=curWin;
+    if(curUnbeaten>longestUnbeaten) longestUnbeaten=curUnbeaten;
+  });
+  let currentType='', currentLen=0;
+  for(let i=chrono.length-1;i>=0;i--){
+    const c=chrono[i].r.cls;
+    if(currentLen===0){currentType=c;currentLen=1;continue;}
+    if(c===currentType)currentLen++; else break;
+  }
+
+  const totalAll = state.matches.length;
+  const step=50;
+  let nextMilestone=step; while(nextMilestone<=totalAll) nextMilestone+=step;
+  const prevMilestone = nextMilestone-step;
+  const toGo = nextMilestone-totalAll;
+  const milestonePct = Math.round(((totalAll-prevMilestone)/step)*100);
+
+  const homeM = involved.filter(x=>x.r.isHome);
+  const awayM = involved.filter(x=>!x.r.isHome);
+  const homeWinPct = homeM.length ? Math.round(homeM.filter(x=>x.r.cls==='win').length/homeM.length*100) : 0;
+  const awayWinPct = awayM.length ? Math.round(awayM.filter(x=>x.r.cls==='win').length/awayM.length*100) : 0;
+
+  const recentForm = chrono.slice(-5).reverse().map(x=>x.r.cls);
+
+  function groupWinRate(key){
+    const map={};
+    involved.forEach(x=>{
+      const k=x.m[key];
+      if(!k) return;
+      if(!map[k]) map[k]={w:0,d:0,l:0};
+      map[k][x.r.cls[0]]++;
+    });
+    return Object.entries(map).map(([name,s])=>{
+      const total=s.w+s.d+s.l;
+      return {name, matches:total, winPct: total?Math.round(s.w/total*100):0};
+    }).filter(x=>x.matches>=3);
+  }
+  const refStats = groupWinRate('referee').sort((a,b)=>b.winPct-a.winPct);
+  const bestReferee = refStats[0];
+  const worstReferee = refStats.slice().sort((a,b)=>a.winPct-b.winPct)[0];
+  const stadStats = groupWinRate('stadium').sort((a,b)=>b.winPct-a.winPct);
+  const bestStadium = stadStats[0];
+
+  // rolling win% trend (chronological, window of 20)
+  const window=20;
+  const trend=[];
+  for(let i=0;i<chrono.length;i++){
+    const from=Math.max(0,i-window+1);
+    const slice=chrono.slice(from,i+1);
+    const w=slice.filter(x=>x.r.cls==='win').length;
+    trend.push(Math.round(w/slice.length*100));
+  }
+
+  // countries
+  const stadiumCounts={};
+  state.matches.forEach(m=>{ if(m.stadium) stadiumCounts[m.stadium]=(stadiumCounts[m.stadium]||0)+1; });
+  const countryMap={};
+  Object.keys(stadiumCounts).forEach(st=>{
+    const code=stadiumCountry(st);
+    if(!countryMap[code]) countryMap[code]={stadiums:[],matches:0};
+    countryMap[code].stadiums.push(st);
+    countryMap[code].matches+=stadiumCounts[st];
+  });
+  const foreignStadiumCount = Object.keys(stadiumCounts).filter(st=>stadiumCountry(st)!=='IL').length;
+
+  return {
+    wins,draws,losses,total:involved.length,
+    longestWin,longestUnbeaten,currentType,currentLen,
+    totalAll,nextMilestone,toGo,milestonePct,
+    homeWinPct,homeMatches:homeM.length,awayWinPct,awayMatches:awayM.length,
+    recentForm,bestReferee,worstReferee,bestStadium,trend,
+    countryMap,foreignStadiumCount,
+  };
+}
+
+function renderJourney() {
+  const j = computeJourney();
+
+  const streakEmoji = j.currentType==='win' ? '🔥' : j.currentType==='loss' ? '🥶' : '😐';
+  const streakLabel = j.currentType==='win' ? 'רצף ניצחונות' : j.currentType==='loss' ? 'רצף הפסדים' : 'רצף תיקו';
+  document.getElementById('journey-streak-flame').textContent = streakEmoji;
+  document.getElementById('journey-streak-num').textContent = j.currentLen || '-';
+  document.getElementById('journey-streak-lbl').textContent = streakLabel;
+
+  document.getElementById('journey-form-pills').innerHTML = j.recentForm.map(c=>{
+    const cls=c, ch = c==='win'?'W':c==='loss'?'L':'D';
+    return `<div class="form-pill ${cls}">${ch}</div>`;
+  }).join('') || '<span style="font-size:11px;color:var(--muted)">אין עדיין נתונים</span>';
+
+  document.getElementById('journey-milestone-next').textContent = '#'+j.nextMilestone;
+  document.getElementById('journey-milestone-togo').textContent = j.toGo+' משחקים נותרו';
+  setTimeout(()=>{ document.getElementById('journey-milestone-fill').style.width = Math.max(4,j.milestonePct)+'%'; }, 100);
+
+  document.getElementById('journey-home-pct').textContent = j.homeWinPct+'%';
+  document.getElementById('journey-home-sub').textContent = j.homeMatches+' משחקים';
+  document.getElementById('journey-away-pct').textContent = j.awayWinPct+'%';
+  document.getElementById('journey-away-sub').textContent = j.awayMatches+' משחקים';
+
+  // sparkline
+  const trend = j.trend;
+  const sparkEl = document.getElementById('journey-sparkline');
+  if (trend.length < 2) { sparkEl.innerHTML = '<div style="font-size:12px;color:var(--muted);text-align:center">אין מספיק נתונים</div>'; }
+  else {
+    const w=300,h=80,pad=6;
+    const pts = trend.map((v,i)=>{
+      const x = pad + (i/(trend.length-1))*(w-2*pad);
+      const y = h-pad - (v/100)*(h-2*pad);
+      return x.toFixed(1)+','+y.toFixed(1);
+    }).join(' ');
+    const last = trend[trend.length-1];
+    sparkEl.innerHTML = `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">
+      <polyline points="${pts}" fill="none" stroke="url(#sparkGrad)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <defs><linearGradient id="sparkGrad" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#4f7dff"/><stop offset="100%" stop-color="#7c3aed"/>
+      </linearGradient></defs>
+    </svg>
+    <div style="text-align:center;font-size:11px;color:var(--muted);margin-top:4px">אחוז ניצחונות ב-20 המשחקים האחרונים (נוכחי: <b style="color:var(--text)">${last}%</b>)</div>`;
+  }
+
+  // nemesis / lucky charm
+  let badgesHtml = '';
+  if (j.worstReferee) badgesHtml += `<div class="badge-card nemesis"><div class="badge-emoji">😈</div><div class="badge-info"><div class="badge-title">השופט הכי קשה</div><div class="badge-name">${j.worstReferee.name}</div><div class="badge-stat">${j.worstReferee.winPct}% ניצחונות ב-${j.worstReferee.matches} משחקים</div></div></div>`;
+  if (j.bestReferee) badgesHtml += `<div class="badge-card lucky"><div class="badge-emoji">😇</div><div class="badge-info"><div class="badge-title">השופט הכי טוב</div><div class="badge-name">${j.bestReferee.name}</div><div class="badge-stat">${j.bestReferee.winPct}% ניצחונות ב-${j.bestReferee.matches} משחקים</div></div></div>`;
+  if (j.bestStadium) badgesHtml += `<div class="badge-card lucky"><div class="badge-emoji">🍀</div><div class="badge-info"><div class="badge-title">אצטדיון הקמע</div><div class="badge-name">${j.bestStadium.name}</div><div class="badge-stat">${j.bestStadium.winPct}% ניצחונות ב-${j.bestStadium.matches} משחקים</div></div></div>`;
+  document.getElementById('journey-badges').innerHTML = badgesHtml || '<div style="font-size:12px;color:var(--muted)">עוד אין מספיק משחקים לנתון הזה</div>';
+
+  // countries
+  const codes = Object.keys(j.countryMap).sort((a,b)=>j.countryMap[b].matches-j.countryMap[a].matches);
+  document.getElementById('journey-countries-count').textContent = codes.length;
+  document.getElementById('journey-foreign-stadiums-count').textContent = j.foreignStadiumCount;
+  document.getElementById('journey-flag-grid').innerHTML = codes.map(code=>{
+    const meta = COUNTRY_META[code] || {name:code,flag:'🏳️'};
+    const c = j.countryMap[code];
+    return `<div class="flag-chip"><div class="flag-emoji">${meta.flag}</div><div class="flag-name">${meta.name}</div><div class="flag-count">${c.stadiums.length} איצטדיונים</div></div>`;
+  }).join('');
+}
+
+function animateCount(el, target, duration=800) {
+  const start = 0;
+  const startTime = performance.now();
+  function tick(now){
+    const p = Math.min(1,(now-startTime)/duration);
+    const eased = 1-Math.pow(1-p,3);
+    el.textContent = Math.round(start + (target-start)*eased);
+    if (p<1) requestAnimationFrame(tick);
+    else el.textContent = target;
+  }
+  requestAnimationFrame(tick);
 }
 
 // ── SCORERS ───────────────────────────────────────────────────────────────────
