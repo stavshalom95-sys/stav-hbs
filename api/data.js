@@ -43,15 +43,31 @@ export default async function handler(req, res) {
     if (!response.ok) throw new Error(`Supabase POST failed: ${response.status} ${await response.text()}`);
   }
 
-  // Vercel's Node fetch has been observed to throw "Failed to parse URL
-  // from ..." on env-var-sourced URLs that `new URL()` itself accepts
-  // just fine (stray whitespace/newlines from how the value was pasted
-  // into the dashboard, or wrapping quotes copied along with the value).
-  // Trimming, stripping accidental quotes, and re-serializing through the
-  // spec URL parser before handing the string to fetch() sidesteps that.
+  // Vercel's Node fetch has been observed to throw on env-var-sourced URLs
+  // that look fine printed out. Log the raw value's shape (length + a
+  // JSON-escaped preview, which reveals embedded \n, \", smart quotes,
+  // zero-width chars etc. that a plain console.log of the string would
+  // hide) BEFORE attempting to parse it, so a failure is still diagnosable
+  // from the Vercel function logs instead of just the banner's error text.
   function normalizeUrl(raw) {
-    const cleaned = raw.trim().replace(/^["']+|["']+$/g, "");
-    return new URL(cleaned).toString();
+    const nonAscii = [...raw]
+      .map((ch, i) => ({ ch, code: ch.codePointAt(0), i }))
+      .filter(({ code }) => code < 0x20 || code > 0x7e);
+    console.log("SHEET_XLSX_URL raw:", {
+      length: raw.length,
+      preview: JSON.stringify(raw),
+      nonAsciiChars: nonAscii.map(({ code, i }) => `0x${code.toString(16)}@${i}`),
+    });
+    // Strip straight quotes AND typographic "smart quotes" (‘/’/
+    // “/”) — the latter are what browsers/word processors often
+    // substitute on paste, and they're invisible in a casual glance at the
+    // Vercel dashboard field but make new URL() reject the whole string.
+    const cleaned = raw.trim().replace(/^["'‘’“”]+|["'‘’“”]+$/g, "").trim();
+    try {
+      return new URL(cleaned).toString();
+    } catch (err) {
+      throw new Error(`SHEET_XLSX_URL אינו קישור תקין: ${JSON.stringify(cleaned)} (${err.message})`);
+    }
   }
 
   // ── GET ──────────────────────────────────────────────────────────────────────
