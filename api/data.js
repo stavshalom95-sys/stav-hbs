@@ -43,6 +43,17 @@ export default async function handler(req, res) {
     if (!response.ok) throw new Error(`Supabase POST failed: ${response.status} ${await response.text()}`);
   }
 
+  // Vercel's Node fetch has been observed to throw "Failed to parse URL
+  // from ..." on env-var-sourced URLs that `new URL()` itself accepts
+  // just fine (stray whitespace/newlines from how the value was pasted
+  // into the dashboard, or wrapping quotes copied along with the value).
+  // Trimming, stripping accidental quotes, and re-serializing through the
+  // spec URL parser before handing the string to fetch() sidesteps that.
+  function normalizeUrl(raw) {
+    const cleaned = raw.trim().replace(/^["']+|["']+$/g, "");
+    return new URL(cleaned).toString();
+  }
+
   // ── GET ──────────────────────────────────────────────────────────────────────
   if (req.method === "GET") {
     // No live sheet configured yet — legacy behavior, serve straight from cache.
@@ -60,7 +71,9 @@ export default async function handler(req, res) {
     // and only fall back to the last cached snapshot if the refresh fails —
     // with the failure surfaced to the client instead of swallowed.
     try {
-      const sheetRes = await fetch(SHEET_XLSX_URL);
+      const sheetUrl = normalizeUrl(SHEET_XLSX_URL);
+      console.log("Fetching sheet from:", sheetUrl, `(raw length ${SHEET_XLSX_URL.length})`);
+      const sheetRes = await fetch(sheetUrl);
       if (!sheetRes.ok) throw new Error(`הורדת הגיליון נכשלה (${sheetRes.status})`);
       const buf = Buffer.from(await sheetRes.arrayBuffer());
       const parsed = parseWorkbook(buf);
