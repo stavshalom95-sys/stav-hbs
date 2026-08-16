@@ -192,6 +192,39 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .spark-wrap{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px;}
 .spark-wrap svg{width:100%;height:auto;display:block;}
 
+/* ON THIS DAY */
+.otd-wrap{display:none;padding:0 16px 10px;}
+.otd-wrap.show{display:block;}
+.otd-card{position:relative;background:linear-gradient(135deg,rgba(255,211,42,0.16),rgba(255,149,0,0.12));border:1px solid rgba(255,211,42,0.4);border-radius:16px;padding:14px 16px;overflow:hidden;animation:fadeUp .3s ease both;}
+.otd-card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 0% 0%,rgba(255,211,42,0.2),transparent 55%);pointer-events:none;}
+.otd-title{font-size:11px;font-weight:800;color:var(--yellow);display:flex;align-items:center;gap:5px;margin-bottom:8px;position:relative;}
+.otd-match{display:flex;align-items:center;justify-content:space-between;gap:10px;position:relative;}
+.otd-teams{font-size:14px;font-weight:800;}
+.otd-teams span{color:var(--muted);font-weight:400;margin:0 4px;}
+.otd-meta{font-size:11px;color:var(--muted);margin-top:3px;}
+.otd-score{font-size:20px;font-weight:900;flex-shrink:0;}
+.otd-years{font-size:10px;background:rgba(255,211,42,0.2);color:var(--yellow);padding:3px 8px;border-radius:20px;font-weight:800;white-space:nowrap;}
+
+/* DRAMA INDEX */
+.drama-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:8px;position:relative;overflow:hidden;}
+.drama-rank{position:absolute;top:0;left:0;font-size:34px;font-weight:900;color:rgba(255,255,255,0.05);line-height:1;padding:4px 10px;}
+.drama-top{display:flex;justify-content:space-between;align-items:flex-start;position:relative;}
+.drama-teams{font-size:14px;font-weight:800;max-width:75%;}
+.drama-teams span{color:var(--muted);font-weight:400;margin:0 4px;}
+.drama-score{font-size:19px;font-weight:900;}
+.drama-meta{font-size:11px;color:var(--muted);margin-top:4px;position:relative;}
+.drama-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px;position:relative;}
+.drama-tag{font-size:10px;font-weight:700;background:var(--surface2);color:var(--accent);padding:3px 8px;border-radius:20px;border:1px solid rgba(79,125,255,0.25);}
+
+/* ODOMETER */
+.odo-card{background:linear-gradient(135deg,rgba(16,217,138,0.14),rgba(79,125,255,0.12));border:1px solid rgba(16,217,138,0.35);border-radius:16px;padding:20px;text-align:center;margin-bottom:10px;}
+.odo-km{font-size:36px;font-weight:900;background:linear-gradient(135deg,var(--green),var(--accent));-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1;}
+.odo-lbl{font-size:11px;color:var(--muted);margin-top:4px;}
+.odo-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.odo-chip{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:10px;text-align:center;}
+.odo-chip .odo-val{font-size:16px;font-weight:900;color:var(--text);}
+.odo-chip .odo-sub{font-size:10px;color:var(--muted);margin-top:2px;}
+
 /* UPLOAD */
 .upload-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);z-index:200;align-items:center;justify-content:center;padding:24px;}
 .upload-overlay.show{display:flex;}
@@ -267,6 +300,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
     </div>
   </div>
 </div>
+
+<div class="otd-wrap" id="otd-wrap"></div>
 
 <div class="tabs">
   <button class="tab active" onclick="switchTab('matches',this)">🏟 משחקים</button>
@@ -388,6 +423,21 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
         <div class="ch-item"><div class="ch-num" id="journey-foreign-stadiums-count">-</div><div class="ch-lbl">איצטדיונים בחו"ל</div></div>
       </div>
       <div class="flag-grid" id="journey-flag-grid"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title"><span class="dot" style="background:var(--green)"></span>קילומטראז' הדרך</div>
+      <div class="odo-card">
+        <div class="odo-km" id="odo-km">-</div>
+        <div class="odo-lbl">ק"מ (הלוך ושוב) במרדף אחרי הפועל באר שבע</div>
+      </div>
+      <div class="odo-grid" id="odo-grid"></div>
+      <div style="font-size:10px;color:var(--muted);margin-top:8px;text-align:center">מרחק אווירי משוער מבאר שבע לכל אצטדיון</div>
+    </div>
+
+    <div class="section">
+      <div class="section-title"><span class="dot" style="background:#fb923c"></span>10 המשחקים הכי דרמטיים</div>
+      <div id="drama-list"></div>
     </div>
   </div>
 
@@ -540,7 +590,7 @@ function switchTab(id, btn) {
 function renderAll() {
   updateStats(); populateFilters(); renderMatches(state.matches);
   renderSeasons(); renderCharts(); renderScorers(state.scorers);
-  renderJourney();
+  renderJourney(); renderOdometer(); renderDramaIndex(); renderOnThisDay();
 }
 
 function updateStats() {
@@ -836,6 +886,7 @@ const STADIUM_COUNTRY = {
   'וומבלי':'GB', 'קאמפ נואו':'ES', 'סנטיאגו ברנבאו':'ES', 'האולימפי ברלין':'DE',
   'דיסלדורף ארנה':'DE', 'ולטינס ארנה':'DE', 'קאראיסקאקיס':'GR', "א.לה קוק ארנה":'EE',
   'ארנה נציונאלה':'RO', 'ארדה ארנה':'BG', 'סאו פאולו':'IT', "מייז'סקי":'PL',
+  'אנפילד':'GB',
 };
 const COUNTRY_META = {
   IL:{name:'ישראל',flag:'🇮🇱'}, ES:{name:'ספרד',flag:'🇪🇸'}, CH:{name:'שוויץ',flag:'🇨🇭'},
@@ -1013,6 +1064,171 @@ function animateCount(el, target, duration=800) {
     else el.textContent = target;
   }
   requestAnimationFrame(tick);
+}
+
+// ── ON THIS DAY ──────────────────────────────────────────────────────────────
+function findOnThisDay() {
+  const now = new Date();
+  const mm = now.getMonth() + 1, dd = now.getDate(), yyyy = now.getFullYear();
+  return state.matches.filter(m => {
+    if (!m.date || m.date.length < 10) return false;
+    const y = parseInt(m.date.slice(0, 4), 10);
+    const mo = parseInt(m.date.slice(5, 7), 10);
+    const da = parseInt(m.date.slice(8, 10), 10);
+    return mo === mm && da === dd && y < yyyy;
+  }).sort((a, b) => a.date.localeCompare(b.date));
+}
+
+function renderOnThisDay() {
+  const wrap = document.getElementById('otd-wrap');
+  const found = findOnThisDay();
+  if (!found.length) { wrap.classList.remove('show'); wrap.innerHTML = ''; return; }
+  const now = new Date();
+  wrap.innerHTML = found.map(m => {
+    const years = now.getFullYear() - parseInt(m.date.slice(0, 4), 10);
+    const yLabel = years === 1 ? 'לפני שנה' : `לפני ${years} שנים`;
+    const r = getResult(m);
+    const cls = r.cls || 'neutral';
+    const color = cls === 'win' ? 'var(--green)' : cls === 'loss' ? 'var(--red)' : cls === 'draw' ? 'var(--yellow)' : 'var(--muted)';
+    return `<div class="otd-card">
+      <div class="otd-title">📅 היום בהיסטוריה</div>
+      <div class="otd-match">
+        <div>
+          <div class="otd-teams">${teamLogo(m.home)}${m.home}<span>נגד</span>${m.away}${teamLogo(m.away)}</div>
+          <div class="otd-meta">${m.stadium || ''} · ${m.framework || ''}</div>
+        </div>
+        <div style="text-align:left;flex-shrink:0">
+          <div class="otd-score" style="color:${color}">${m.result || ''}</div>
+          <div class="otd-years">${yLabel}</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  wrap.classList.add('show');
+}
+
+// ── AWAY-DAY ODOMETER ─────────────────────────────────────────────────────────
+// Approximate coordinates (city/venue level — "as the crow flies", not actual
+// travel routes). Verified against each stadium's real match context before
+// being classified as domestic vs. foreign (see STADIUM_COUNTRY above).
+const HOME_COORDS = [31.2530, 34.7915]; // Turner Stadium, Beer Sheva
+const STADIUM_COORDS = {
+  'טרנר':[31.2530,34.7915], 'וסרמיל':[31.2461,34.8044],
+  'בלומפילד':[32.0577,34.7519], 'טדי':[31.7573,35.2135], 'סמי עופר':[32.7940,34.9896],
+  'קרית אליעזר':[32.8082,34.9736], 'נתניה':[32.3215,34.8532], 'המושבה':[32.0917,34.8869],
+  'מכתש':[32.0917,34.8869], 'לויטה':[32.0917,34.8869], 'וולפסון 2':[32.0234,34.7767],
+  'הקופסה':[33.2075,35.5697], 'קרית שמונה':[33.2075,35.5697], 'רמת גן':[32.0700,34.8235],
+  'רעננה':[32.1848,34.8713], 'רמלה':[31.9276,34.8625], 'נס ציונה':[31.9294,34.7973],
+  'הרצליה':[32.1624,34.8447], 'יבנה':[31.8783,34.7402], 'עילוט':[32.7500,35.2833],
+  'עכו':[32.9281,35.0818], 'עפולה':[32.6076,35.2897], 'גרונדמן':[31.8014,34.6435],
+  'הי"א':[31.8014,34.6435], 'דוחא':[32.8608,35.2967], 'סלה':[31.6688,34.5742],
+  'גרין':[32.7500,35.3200], 'וינטר':[32.0700,34.8235], 'הברפלד':[32.0500,34.7800],
+  'האלדאש':[31.2530,34.7915],
+  // foreign
+  'Ciutat de valencia':[39.4894,-0.3583], 'Cornaredo Stadium':[46.0037,8.9511],
+  'Estadio Alejandro Villanueva':[-12.0654,-77.0475], 'Feyenoord Stadium':[51.8935,4.5233],
+  'Kadrioru Staadion':[59.4372,24.7539], 'Selhurst Park':[51.3983,-0.0855],
+  'אנפילד':[53.4308,-2.9608], 'וומבלי':[51.5560,-0.2795], 'קאמפ נואו':[41.3809,2.1228],
+  'סנטיאגו ברנבאו':[40.4531,-3.6883], 'האולימפי ברלין':[52.5147,13.2395],
+  'דיסלדורף ארנה':[51.2617,6.7333], 'ולטינס ארנה':[51.5547,7.0674],
+  'קאראיסקאקיס':[37.9481,23.6486], "א.לה קוק ארנה":[59.4372,24.7454],
+  'ארנה נציונאלה':[44.4372,26.0338], 'ארדה ארנה':[41.6499,25.3672],
+  'סאו פאולו':[40.8280,14.1930], "מייז'סקי":[50.0838,19.9349],
+};
+function haversineKm(a, b) {
+  const R = 6371;
+  const toRad = d => d * Math.PI / 180;
+  const dLat = toRad(b[0] - a[0]), dLon = toRad(b[1] - a[1]);
+  const lat1 = toRad(a[0]), lat2 = toRad(b[0]);
+  const h = Math.sin(dLat/2)**2 + Math.cos(lat1)*Math.cos(lat2)*Math.sin(dLon/2)**2;
+  return 2 * R * Math.asin(Math.sqrt(h));
+}
+function computeOdometer() {
+  let oneWay = 0, counted = 0, unmapped = 0;
+  state.matches.forEach(m => {
+    if (!m.stadium) return;
+    const coords = STADIUM_COORDS[m.stadium];
+    if (!coords) { unmapped++; return; }
+    oneWay += haversineKm(HOME_COORDS, coords);
+    counted++;
+  });
+  return { oneWay, roundTrip: oneWay * 2, counted, unmapped };
+}
+function renderOdometer() {
+  const o = computeOdometer();
+  const km = Math.round(o.roundTrip);
+  document.getElementById('odo-km').textContent = km.toLocaleString();
+  const MOON = 384400, EARTH_CIRC = 40075, MARATHON = 42.195, ISRAEL_LEN = 470;
+  const chips = [
+    { val: (km / EARTH_CIRC).toFixed(1) + 'x', sub: 'סיבובים סביב כדור הארץ' },
+    { val: Math.min(999, Math.round(km / MOON * 100)) + '%', sub: 'מהדרך לירח' },
+    { val: Math.round(km / MARATHON).toLocaleString(), sub: 'מרתונים ברצף' },
+    { val: (km / ISRAEL_LEN).toFixed(1) + 'x', sub: 'פעמים אורך ישראל' },
+  ];
+  document.getElementById('odo-grid').innerHTML = chips.map(c =>
+    `<div class="odo-chip"><div class="odo-val">${c.val}</div><div class="odo-sub">${c.sub}</div></div>`
+  ).join('');
+}
+
+// ── DRAMA INDEX ──────────────────────────────────────────────────────────────
+function parseScorerMinutes(scorersText) {
+  const text = String(scorersText || '');
+  const re = /([^,()]+)\(([^)]+)\)/g;
+  let m; const out = [];
+  while ((m = re.exec(text)) !== null) {
+    const name = m[1].trim();
+    const minutes = m[2].split(',').map(s => parseInt(s)).filter(n => !isNaN(n));
+    if (name) out.push({ name, minutes });
+  }
+  return out;
+}
+function computeDramaScore(match) {
+  const r = getResult(match);
+  if (r.cls === 'neutral' || !r.cls) return null;
+  const goals = parseScorerMinutes(match.scorers);
+  const allMinutes = goals.flatMap(g => g.minutes).sort((a,b)=>a-b);
+  let score = 0;
+  const tags = [];
+
+  const lateGoals = allMinutes.filter(x => x >= 85);
+  if (lateGoals.length && r.cls !== 'loss') {
+    score += 40 * lateGoals.length;
+    tags.push(`שער בדקה ${lateGoals[lateGoals.length-1]}'`);
+  }
+  if (/\(/.test(match.result || '')) { score += 35; tags.push('הוכרע בפנדלים'); }
+  const totalGoals = (r.myGoals||0) + (r.oppGoals||0);
+  if (totalGoals >= 5) { score += totalGoals * 4; tags.push(`${totalGoals} שערים במשחק`); }
+  if (Math.abs((r.myGoals||0) - (r.oppGoals||0)) === 1) score += 15;
+  if (/גמר/.test(match.framework||'') || /גמר|אלופ/.test(match.round||'')) { score += 50; tags.push('משחק גמר'); }
+  const maxByScorer = goals.reduce((mx,g)=>Math.max(mx,g.minutes.length),0);
+  if (maxByScorer >= 3) { score += 30; tags.push('הטריק אישי'); }
+  else if (maxByScorer === 2) score += 10;
+  if (r.cls === 'win') score += 10;
+  if (match.attendance && match.attendance >= 15000) { score += 8; tags.push('קהל ענק'); }
+
+  return { match, r, score, tags };
+}
+function computeDramaIndex() {
+  return state.matches.map(computeDramaScore).filter(x => x && x.score > 0)
+    .sort((a, b) => b.score - a.score).slice(0, 10);
+}
+function renderDramaIndex() {
+  const top = computeDramaIndex();
+  const el = document.getElementById('drama-list');
+  if (!top.length) { el.innerHTML = '<div style="font-size:12px;color:var(--muted)">עוד אין מספיק נתונים</div>'; return; }
+  el.innerHTML = top.map((d, i) => {
+    const m = d.match, r = d.r;
+    const color = r.cls === 'win' ? 'var(--green)' : r.cls === 'loss' ? 'var(--red)' : 'var(--yellow)';
+    return `<div class="drama-card">
+      <div class="drama-rank">${i+1}</div>
+      <div class="drama-top">
+        <div class="drama-teams">${m.home}<span>נגד</span>${m.away}</div>
+        <div class="drama-score" style="color:${color}">${m.result}</div>
+      </div>
+      <div class="drama-meta">${formatDate(m.date)} · ${m.framework||''} · ${m.stadium||''}</div>
+      <div class="drama-tags">${d.tags.map(t=>`<div class="drama-tag">${t}</div>`).join('')}</div>
+    </div>`;
+  }).join('');
 }
 
 // ── SCORERS ───────────────────────────────────────────────────────────────────
