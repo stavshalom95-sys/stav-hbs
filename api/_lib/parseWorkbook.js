@@ -77,30 +77,30 @@ export function parseWorkbook(buffer) {
     const r = rows[i];
     if (!r[0]) continue;
     matches.push({
-      home: String(r[0] || ""), away: String(r[1] || ""), date: parseDateCell(r[2]), day: String(r[3] || ""),
-      time: parseTimeCell(r[4]), framework: String(r[5] || ""), round: String(r[6] || ""), result: String(r[7] || ""),
-      stadium: String(r[8] || ""), attendance: typeof r[9] === "number" ? Math.round(r[9]) : 0,
-      scorers: String(r[10] || ""), referee: String(r[11] || ""), bonus: String(r[12] || ""),
+      home: String(r[0] || "").trim(), away: String(r[1] || "").trim(), date: parseDateCell(r[2]), day: String(r[3] || "").trim(),
+      time: parseTimeCell(r[4]), framework: String(r[5] || "").trim(), round: String(r[6] || "").trim(), result: String(r[7] || "").trim(),
+      stadium: String(r[8] || "").trim(), attendance: typeof r[9] === "number" ? Math.round(r[9]) : 0,
+      scorers: String(r[10] || "").trim(), referee: String(r[11] || "").trim(), bonus: String(r[12] || "").trim(),
     });
   }
   if (matches.length === 0) throw new Error("לא נמצאו משחקים בגיליון סיכום");
   matches.sort((a, b) => b.date.localeCompare(a.date));
 
   const scorers = parseStats(findSheet(wb, SHEETS.scorers), "מלך שערים")
-    .map((r) => ({ name: String(r[0]), goals: Number(r[1] || 0) }));
+    .map((r) => ({ name: String(r[0]).trim(), goals: Number(r[1] || 0) }));
   const stadiums = parseStats(findSheet(wb, SHEETS.stadiums), "איצטדיון")
-    .map((r) => ({ name: String(r[0]), count: Number(r[1] || 0), avg: Math.round(Number(r[2] || 0)) }));
+    .map((r) => ({ name: String(r[0]).trim(), count: Number(r[1] || 0), avg: Math.round(Number(r[2] || 0)) }));
   const days = parseStats(findSheet(wb, SHEETS.days), "יום")
     .filter((r) => String(r[0]) !== "Grand Total")
-    .map((r) => ({ day: String(r[0]), count: Number(r[1] || 0) }));
+    .map((r) => ({ day: String(r[0]).trim(), count: Number(r[1] || 0) }));
   const frameworks = parseStats(findSheet(wb, SHEETS.frameworks), "מסגרת")
-    .map((r) => ({ name: String(r[0]), count: Number(r[1] || 0) }));
+    .map((r) => ({ name: String(r[0]).trim(), count: Number(r[1] || 0) }));
   const referees = parseStats(findSheet(wb, SHEETS.referees), "שופט")
-    .map((r) => ({ name: String(r[0]), count: Number(r[1] || 0) }));
+    .map((r) => ({ name: String(r[0]).trim(), count: Number(r[1] || 0) }));
   const homeTeams = parseStats(findSheet(wb, SHEETS.homeTeams), "קבוצה ביתית")
-    .map((r) => ({ name: String(r[0]), count: Number(r[1] || 0) }));
+    .map((r) => ({ name: String(r[0]).trim(), count: Number(r[1] || 0) }));
   const awayTeams = parseStats(findSheet(wb, SHEETS.awayTeams), "קבוצת חוץ")
-    .map((r) => ({ name: String(r[0]), count: Number(r[1] || 0) }));
+    .map((r) => ({ name: String(r[0]).trim(), count: Number(r[1] || 0) }));
 
   const seasonsMap = {};
   matches.forEach((m) => {

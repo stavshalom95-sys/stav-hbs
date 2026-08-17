@@ -245,6 +245,19 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .empty{text-align:center;padding:40px;color:var(--muted);}
 .empty .emoji{font-size:40px;margin-bottom:8px;}
 #file-input{display:none;}
+
+/* ── DESKTOP / LARGER VIEWPORTS ─────────────────────────────────────────────
+   Below 640px (real phones) nothing here applies — the layout is untouched.
+   Above it, the app is centered in a fixed-width column instead of
+   stretching full-bleed, so it stays readable on laptop/desktop screens. */
+@media (min-width: 640px) {
+  .header, .stale-banner, .otd-wrap, .tabs, .content {
+    max-width: 560px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .header { box-shadow: 0 0 80px rgba(0,0,0,0.45); }
+}
 </style>
 </head>
 <body>
@@ -561,6 +574,36 @@ const TEAM_LOGOS = {
   'קריסטל פאלאס': 'https://r2.thesportsdb.com/images/media/team/badge/ia6i3m1656014992.png',
   "מנצ'סטר יונייטד": 'https://r2.thesportsdb.com/images/media/team/badge/xzqdr11517660252.png',
   'ויקטוריה פלזן': 'https://r2.thesportsdb.com/images/media/team/badge/at8i2h1679265942.png',
+  'עירוני טבריה': 'https://r2.thesportsdb.com/images/media/team/badge/78q5ez1656067666.png',
+  'נבחרת ישראל עד 21': 'https://r2.thesportsdb.com/images/media/team/badge/uhlmnc1602253610.png',
+  'בית"ר תל אביב': 'https://r2.thesportsdb.com/images/media/team/badge/hnrdf51617289610.png',
+  'ליברפול': 'https://r2.thesportsdb.com/images/media/team/badge/kfaher1737969724.png',
+  'פורטו': 'https://r2.thesportsdb.com/images/media/team/badge/xu47rb1628855600.png',
+  'סטיאווה בוקרשט': 'https://r2.thesportsdb.com/images/media/team/badge/123g021759420850.png',
+  'נבחרת מקדוניה': 'https://r2.thesportsdb.com/images/media/team/badge/v6xfhn1552943846.png',
+  'מאריבור': 'https://r2.thesportsdb.com/images/media/team/badge/titlog1776705066.png',
+  'לודוגורץ': 'https://r2.thesportsdb.com/images/media/team/badge/35cw6l1752946925.png',
+  'הונבנד': 'https://r2.thesportsdb.com/images/media/team/badge/9bskph1775184882.png',
+  'בשיקטאש': 'https://r2.thesportsdb.com/images/media/team/badge/svo05k1776827439.png',
+  'אינטר': 'https://r2.thesportsdb.com/images/media/team/badge/ryhu6d1617113103.png',
+  'ספרטה פראג': 'https://r2.thesportsdb.com/images/media/team/badge/j00qct1718287150.png',
+  'נבחרת ליכטנשטיין': 'https://r2.thesportsdb.com/images/media/team/badge/4o0nlh1591970494.png',
+  'סאותהמפטון': 'https://r2.thesportsdb.com/images/media/team/badge/ggqtd01621593274.png',
+  'סלטיק': 'https://r2.thesportsdb.com/images/media/team/badge/3uv1641758780002.png',
+  'שריף טיראספול': 'https://r2.thesportsdb.com/images/media/team/badge/6exmnv1781242046.png',
+  'מכבי קרית גת': 'https://r2.thesportsdb.com/images/media/team/badge/3049yp1781827905.png',
+  'תון': 'https://r2.thesportsdb.com/images/media/team/badge/sovjgl1699462359.png',
+  'נבחרת פורטוגל': 'https://r2.thesportsdb.com/images/media/team/badge/swqvpy1455466083.png',
+  'נבחרת פינלנד': 'https://r2.thesportsdb.com/images/media/team/badge/wgvfd21730303889.png',
+  'נבחרת רוסיה': 'https://r2.thesportsdb.com/images/media/team/badge/nz50i51689197440.png',
+  'הפועל ראשון לציון': 'https://r2.thesportsdb.com/images/media/team/badge/x1tspx1781827173.png',
+  'נבחרת אוקראינה': 'https://r2.thesportsdb.com/images/media/team/badge/k36g2e1591982718.png',
+  'נבחרת יוון': 'https://r2.thesportsdb.com/images/media/team/badge/xtxtts1455465601.png',
+  'ויסלה קראקוב': 'https://r2.thesportsdb.com/images/media/team/badge/y9j7hv1781237442.png',
+  'בלחאטוב': 'https://r2.thesportsdb.com/images/media/team/badge/mbkhfh1626108448.png',
+  'הפועל עפולה': 'https://r2.thesportsdb.com/images/media/team/badge/e8v3011664188566.png',
+  'הכח עמידר רמת גן': 'https://r2.thesportsdb.com/images/media/team/badge/esky5q1649075331.png',
+  'בני לוד': 'https://r2.thesportsdb.com/images/media/team/badge/sqqkis1649073364.png',
 };
 
 const STADIUM_IMAGES = {
@@ -593,8 +636,8 @@ const STADIUM_IMAGES = {
   'גרונדמן': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Grundman_Stadium_01.jpg/960px-Grundman_Stadium_01.jpg',
   'סלה': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Sala_Stadium01.jpg/960px-Sala_Stadium01.jpg',
   'Ciutat de valencia': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Estadi_Ciutat_de_Val%C3%A8ncia_-_nocturna.jpg/960px-Estadi_Ciutat_de_Val%C3%A8ncia_-_nocturna.jpg',
-  'סאו פאולו': 'https://upload.wikimedia.org/wikipedia/commons/c/c6/ARENA_CORINTHIANS.jpg',
-  'מייז\'סקי': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/LuzhnikiStadium.jpg/960px-LuzhnikiStadium.jpg',
+  'סאו פאולו': 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Stadio_San_Paolo_Panoramica_Champions_League.jpg/960px-Stadio_San_Paolo_Panoramica_Champions_League.jpg',
+  'מייז\'סקי': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Stadion_Miejski_im._Henryka_Reymana_w_Krakowie.jpg/960px-Stadion_Miejski_im._Henryka_Reymana_w_Krakowie.jpg',
   'דוחא': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Doha_Stadium01.jpg/960px-Doha_Stadium01.jpg',
   'עכו': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Acre_Municipal_Stadium_%2811_April%2C2015%29.XI.jpg/960px-Acre_Municipal_Stadium_%2811_April%2C2015%29.XI.jpg',
   'הרצליה': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Herzliya_Toto_Stadium.jpg/960px-Herzliya_Toto_Stadium.jpg',
@@ -751,7 +794,7 @@ function buildMatchCard(m, i) {
     </div>
     ${hasScorers ? `<div class="detail-full"><div class="detail-label">⚽ כובשים לב"ש</div><div class="detail-value">${m.scorers}</div></div>` : ''}
     ${hasBonus ? `<div class="bonus-box"><span class="star">⭐</span><span class="text">${m.bonus}</span></div>` : ''}
-    <div style="width:100%;height:150px;overflow:hidden;border-radius:10px;margin-top:8px;background:#1c1c26"><img src="https://raw.githubusercontent.com/stavshalom95-sys/stav-hbs/main/photos/${m.date}.jpg" data-fallback="${STADIUM_IMAGES[m.stadium]||''}" alt="" style="width:100%;height:100%;object-fit:cover" onerror="handleImgFallback(this)"></div>
+    <div class="match-photo-wrap" data-date="${m.date}" data-fallback="${(STADIUM_IMAGES[m.stadium]||'').replace(/"/g,'&quot;')}" style="width:100%;height:150px;overflow:hidden;border-radius:10px;margin-top:8px;background:#1c1c26"></div>
   `;
 
   return `<div class="match-card ${r.cls}" style="animation-delay:${delay}s" onclick="toggleCard(this)">
@@ -778,11 +821,26 @@ function buildMatchCard(m, i) {
   </div>`;
 }
 
+function loadCardPhoto(card) {
+  const wrap = card.querySelector('.match-photo-wrap');
+  if (!wrap || wrap.dataset.loaded) return;
+  wrap.dataset.loaded = '1';
+  const img = document.createElement('img');
+  img.loading = 'lazy';
+  img.alt = '';
+  img.style.cssText = 'width:100%;height:100%;object-fit:cover';
+  img.dataset.fallback = wrap.dataset.fallback;
+  img.addEventListener('error', () => handleImgFallback(img));
+  img.src = `https://raw.githubusercontent.com/stavshalom95-sys/stav-hbs/main/photos/${wrap.dataset.date}.jpg`;
+  wrap.appendChild(img);
+}
+
 function toggleCard(card) {
   const isOpen = card.classList.contains('expanded');
   document.querySelectorAll('.match-card.expanded').forEach(c=>c.classList.remove('expanded'));
   if (!isOpen) {
     card.classList.add('expanded');
+    loadCardPhoto(card);
     setTimeout(()=>card.scrollIntoView({behavior:'smooth',block:'nearest'}),100);
   }
 }
