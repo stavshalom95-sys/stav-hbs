@@ -1248,7 +1248,7 @@ function computeDramaScore(match) {
   const totalGoals = (r.myGoals||0) + (r.oppGoals||0);
   if (totalGoals >= 5) { score += totalGoals * 4; tags.push(`${totalGoals} שערים במשחק`); }
   if (Math.abs((r.myGoals||0) - (r.oppGoals||0)) === 1) score += 15;
-  if (/גמר/.test(match.framework||'') || /גמר|אלופ/.test(match.round||'')) { score += 50; tags.push('משחק גמר'); }
+  if (/^גמר(\s|$)/.test((match.round||'').trim())) { score += 50; tags.push('משחק גמר'); }
   const maxByScorer = goals.reduce((mx,g)=>Math.max(mx,g.minutes.length),0);
   if (maxByScorer >= 3) { score += 30; tags.push('הטריק אישי'); }
   else if (maxByScorer === 2) score += 10;
