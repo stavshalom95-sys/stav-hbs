@@ -265,7 +265,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
       </div>
     </div>
     <div style="display:flex;gap:8px;align-items:center;">
-      <button class="share-btn" onclick="shareOnTwitter()">𝕏 שתף</button>
+      <button class="share-btn" onclick="shareStats()">📤 שתף</button>
       <button class="upload-btn" onclick="openAdmin()">🔐 עדכן</button>
     </div>
   </div>
@@ -613,13 +613,19 @@ function updateStats() {
   animateCount(document.getElementById('stat-losses'), l);
 }
 
-function shareOnTwitter() {
+function shareStats() {
   const total = state.matches.length;
   const w = document.getElementById('stat-wins').textContent;
   const d = document.getElementById('stat-draws').textContent;
   const l = document.getElementById('stat-losses').textContent;
-  const text = `צפיתי ב-${total} משחקים של הפועל באר שבע! 🔴⚫\n${w} ניצחונות | ${d} תיקו | ${l} הפסדים\nstav-hbs.vercel.app`;
-  window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(text), '_blank');
+  const text = `צפיתי ב-${total} משחקים של הפועל באר שבע! 🔴⚫\n${w} ניצחונות | ${d} תיקו | ${l} הפסדים`;
+  const url = 'https://stav-hbs.vercel.app';
+
+  if (navigator.share) {
+    navigator.share({ title: 'המשחקים שלי – סתיו', text, url }).catch(() => {});
+  } else {
+    window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(text + '\n' + url), '_blank');
+  }
 }
 
 // ── MATCH RESULT HELPERS ──────────────────────────────────────────────────────
