@@ -82,9 +82,26 @@ export default async function handler(req, res) {
       }
     }
 
-    // Live sheet configured: pull the workbook fresh on every load, cache it,
-    // and only fall back to the last cached snapshot if the refresh fails —
-    // with the failure surfaced to the client instead of swallowed.
+    // Serve straight from cache when it's still fresh — avoids re-fetching
+    // the sheet, re-parsing the XLSX, and re-writing Supabase on every
+    // single page load. A cache-read failure here just falls through to
+    // the live-fetch path below, same as before.
+    const CACHE_TTL_MS = 5 * 60 * 1000;
+    try {
+      const cached = await readCache();
+      const age = cached && cached.lastUpdated ? Date.now() - new Date(cached.lastUpdated).getTime() : Infinity;
+      if (cached && age < CACHE_TTL_MS) {
+        res.setHeader("Cache-Control", "public, max-age=30, s-maxage=300, stale-while-revalidate=600");
+        return res.status(200).json(cached);
+      }
+    } catch (err) {
+      console.error("Cache freshness check failed, falling back to live fetch:", err.message);
+    }
+
+    // Live sheet configured: pull the workbook fresh when the cache is stale,
+    // cache it, and only fall back to the last cached snapshot if the
+    // refresh fails — with the failure surfaced to the client instead of
+    // swallowed.
     try {
       const sheetUrl = normalizeUrl(SHEET_XLSX_URL);
       console.log("Fetching sheet from:", sheetUrl, `(raw length ${SHEET_XLSX_URL.length})`);

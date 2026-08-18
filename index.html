@@ -13,14 +13,14 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://stav-hbs.vercel.app">
 <meta property="og:title" content="המשחקים שלי – סתיו 🏟">
-<meta property="og:description" content="כל המשחקים שהייתי בהם מאז 2008 – בעיקר הפועל ב״ש, אבל גם משחקים נוספים. 536+ משחקים, תוצאות, איצטדיונים וכובשים">
+<meta property="og:description" content="כל המשחקים שהייתי בהם מאז 2008 – בעיקר הפועל ב״ש, אבל גם משחקים נוספים. 560+ משחקים, תוצאות, איצטדיונים וכובשים">
 <meta property="og:site_name" content="משחקים סתיו">
 <meta property="og:image" content="https://raw.githubusercontent.com/stavshalom95-sys/stav-hbs/main/preview.png">
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:url" content="https://stav-hbs.vercel.app">
 <meta name="twitter:title" content="המשחקים שלי – סתיו 🏟">
-<meta name="twitter:description" content="כל המשחקים שהייתי בהם מאז 2008 – בעיקר הפועל ב״ש, אבל גם משחקים נוספים. 536+ משחקים, תוצאות, איצטדיונים וכובשים">
+<meta name="twitter:description" content="כל המשחקים שהייתי בהם מאז 2008 – בעיקר הפועל ב״ש, אבל גם משחקים נוספים. 560+ משחקים, תוצאות, איצטדיונים וכובשים">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/stavshalom95-sys/stav-hbs/main/preview.png">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;600;700;900&display=swap');
@@ -1367,7 +1367,7 @@ function populateFilters() {
   const sEl=document.getElementById('filter-stadium'), tEl=document.getElementById('filter-team');
   const curS=sEl.value, curT=tEl.value;
   sEl.innerHTML='<option value="">כל האיצטדיונים</option>'+stadiums.map(s=>`<option ${s===curS?'selected':''} value="${s.replace(/"/g,'&quot;')}">${s}</option>`).join('');
-  tEl.innerHTML='<option value="">כל הקבוצות</option>'+teams.map(t=>`<option ${t===curT?'selected':''} value="${t}">${t}</option>`).join('');
+  tEl.innerHTML='<option value="">כל הקבוצות</option>'+teams.map(t=>`<option ${t===curT?'selected':''} value="${t.replace(/"/g,'&quot;')}">${t}</option>`).join('');
 }
 
 function applyFilters() {
