@@ -51,7 +51,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .share-btn{display:flex;align-items:center;gap:5px;background:none;border:1px solid #1d9bf0;border-radius:10px;padding:7px 11px;color:#1d9bf0;font-size:12px;font-weight:700;font-family:var(--font);cursor:pointer;}
 .share-btn:active{transform:scale(0.97);}
 
-.tabs{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;padding:10px 16px;background:var(--bg);position:sticky;top:138px;z-index:90;}
+.tabs{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;padding:10px 16px;background:var(--bg);position:sticky;top:138px;z-index:90;}
 .tab{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:8px 2px;font-size:10px;font-weight:700;font-family:var(--font);color:var(--muted);cursor:pointer;transition:all .2s;text-align:center;}
 .tab.active{background:linear-gradient(135deg,var(--accent),var(--accent2));border-color:transparent;color:white;box-shadow:0 4px 16px rgba(79,125,255,0.35);}
 
@@ -258,6 +258,78 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
   }
   .header { box-shadow: 0 0 80px rgba(0,0,0,0.45); }
 }
+
+/* ── BONUS FEATURES ──────────────────────────────────────────────────────── */
+.surprise-btn{width:100%;background:linear-gradient(135deg,#4f7dff,#7c3aed);border:none;border-radius:14px;padding:16px;font-size:14px;font-weight:800;color:white;font-family:var(--font);cursor:pointer;box-shadow:0 6px 20px rgba(79,125,255,0.3);}
+.surprise-btn:active{transform:scale(0.98);}
+
+/* globe */
+.globe-wrap{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:10px;display:flex;flex-direction:column;align-items:center;}
+#globe-canvas{width:100%;max-width:320px;aspect-ratio:1;display:block;touch-action:none;cursor:grab;}
+#globe-canvas:active{cursor:grabbing;}
+.globe-hint{font-size:10px;color:var(--muted);margin-top:4px;}
+
+/* heatmap */
+.heatmap-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:14px;}
+.heatmap-nav{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:10px;}
+.hm-nav-btn{background:var(--surface2);border:1px solid var(--border);border-radius:8px;width:32px;height:32px;color:var(--text);font-size:14px;cursor:pointer;}
+.hm-year{font-size:16px;font-weight:900;min-width:50px;text-align:center;}
+.heatmap-scroll{overflow-x:auto;padding-bottom:4px;}
+.heatmap-grid{display:flex;gap:3px;direction:ltr;width:max-content;}
+.hm-week{display:flex;flex-direction:column;gap:3px;}
+.hm-cell{width:11px;height:11px;border-radius:3px;background:var(--surface2);}
+.hm-cell.hm-empty{background:transparent;}
+.hm-cell.hm-none{background:var(--surface2);}
+.hm-cell.hm-win{background:var(--green);cursor:pointer;}
+.hm-cell.hm-loss{background:var(--red);cursor:pointer;}
+.hm-cell.hm-draw{background:var(--yellow);cursor:pointer;}
+.hm-cell.hm-neutral{background:var(--muted);cursor:pointer;}
+.heatmap-legend{display:flex;align-items:center;gap:5px;margin-top:10px;font-size:10px;color:var(--muted);flex-wrap:wrap;}
+.heatmap-legend .hm-cell{width:10px;height:10px;}
+.heatmap-count{text-align:center;font-size:11px;color:var(--muted);margin-top:8px;}
+
+/* recap box */
+.recap-box{background:rgba(79,125,255,0.06);border:1px solid rgba(79,125,255,0.2);border-radius:10px;padding:10px 12px;margin-top:8px;}
+.recap-box .recap-label{font-size:10px;color:var(--accent);font-weight:800;margin-bottom:4px;}
+.recap-box .recap-text{font-size:12px;line-height:1.6;color:var(--text);}
+
+/* fan DNA card */
+.dna-card-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:14px;text-align:center;}
+.dna-preview{margin-bottom:10px;border-radius:16px;overflow:hidden;background:#0d0d16;min-height:0;}
+.dna-generate-btn{width:100%;background:linear-gradient(135deg,#4f7dff,#7c3aed);border:none;border-radius:12px;padding:13px;font-size:13px;font-weight:800;color:white;font-family:var(--font);cursor:pointer;margin-bottom:8px;}
+.dna-generate-btn:disabled{opacity:0.6;}
+.dna-share-btn{width:100%;justify-content:center;}
+
+/* badges */
+.badges-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.badge-tile{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:12px;text-align:center;}
+.badge-tile.locked{opacity:0.55;}
+.badge-tile.unlocked{border-color:rgba(255,211,42,0.4);background:linear-gradient(135deg,rgba(255,211,42,0.08),rgba(255,149,0,0.05));}
+.badge-tile-emoji{font-size:28px;margin-bottom:4px;}
+.badge-tile-name{font-size:12px;font-weight:800;}
+.badge-tile-desc{font-size:9px;color:var(--muted);margin-top:2px;min-height:22px;}
+.badge-tile-track{background:var(--surface2);border-radius:10px;height:5px;margin-top:6px;overflow:hidden;}
+.badge-tile-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:10px;}
+.badge-tile.unlocked .badge-tile-fill{background:linear-gradient(90deg,var(--yellow),#ff9500);}
+.badge-tile-stat{font-size:9px;color:var(--muted);margin-top:5px;}
+
+/* prediction quiz */
+.quiz-stats-grid{margin-bottom:10px;}
+.quiz-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:16px;text-align:center;}
+.quiz-match{font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;}
+.quiz-match span{color:var(--muted);font-weight:400;font-size:11px;}
+.quiz-meta{font-size:11px;color:var(--muted);margin-top:6px;}
+.quiz-inputs{display:flex;align-items:center;justify-content:center;gap:10px;margin:16px 0;}
+.quiz-input-group{display:flex;flex-direction:column;align-items:center;gap:6px;}
+.quiz-input-label{font-size:10px;color:var(--muted);max-width:80px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.quiz-input{width:56px;height:56px;text-align:center;font-size:22px;font-weight:900;background:var(--surface2);border:1px solid var(--border);border-radius:12px;color:var(--text);font-family:var(--font);}
+.quiz-vs{font-size:20px;color:var(--muted);align-self:center;margin-top:20px;}
+.quiz-btn{background:linear-gradient(135deg,#4f7dff,#7c3aed);border:none;border-radius:12px;padding:12px 24px;font-size:13px;font-weight:800;color:white;font-family:var(--font);cursor:pointer;}
+.quiz-real-score{font-size:32px;font-weight:900;margin:12px 0 6px;}
+.quiz-result{font-size:13px;font-weight:800;margin-bottom:14px;padding:8px;border-radius:10px;}
+.quiz-result.exact{background:rgba(16,217,138,0.14);color:var(--green);}
+.quiz-result.partial{background:rgba(255,211,42,0.14);color:var(--yellow);}
+.quiz-result.miss{background:rgba(255,71,87,0.14);color:var(--red);}
 </style>
 </head>
 <body>
@@ -317,11 +389,12 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 <div class="otd-wrap" id="otd-wrap"></div>
 
 <div class="tabs">
-  <button class="tab active" onclick="switchTab('matches',this)">🏟 משחקים</button>
+  <button class="tab active" id="tab-btn-matches" onclick="switchTab('matches',this)">🏟 משחקים</button>
   <button class="tab" onclick="switchTab('seasons',this)">📅 עונות</button>
   <button class="tab" onclick="switchTab('journey',this)">🌍 מסע</button>
   <button class="tab" onclick="switchTab('insights',this)">📊 תובנות</button>
   <button class="tab" onclick="switchTab('scorers',this)">⚽ כובשים</button>
+  <button class="tab" onclick="switchTab('bonus',this)">🎮 בונוס</button>
 </div>
 
 <div class="content">
@@ -451,6 +524,61 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
     <div class="section">
       <div class="section-title"><span class="dot" style="background:#fb923c"></span>10 המשחקים הכי דרמטיים</div>
       <div id="drama-list"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title"><span class="dot" style="background:var(--accent2)"></span>גלובוס האיצטדיונים</div>
+      <div class="globe-wrap">
+        <canvas id="globe-canvas"></canvas>
+        <div class="globe-hint">גררו כדי לסובב 👆</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title"><span class="dot" style="background:#38bdf8"></span>מפת החום השנתית</div>
+      <div class="heatmap-card">
+        <div class="heatmap-nav">
+          <button class="hm-nav-btn" onclick="heatmapPrevYear()">◀</button>
+          <div class="hm-year" id="heatmap-year">-</div>
+          <button class="hm-nav-btn" onclick="heatmapNextYear()">▶</button>
+        </div>
+        <div class="heatmap-scroll"><div class="heatmap-grid" id="heatmap-grid"></div></div>
+        <div class="heatmap-legend">
+          <span class="hm-cell hm-none" style="display:inline-block"></span><span>אין משחק</span>
+          <span class="hm-cell hm-win" style="display:inline-block"></span><span>ניצחון</span>
+          <span class="hm-cell hm-draw" style="display:inline-block"></span><span>תיקו</span>
+          <span class="hm-cell hm-loss" style="display:inline-block"></span><span>הפסד</span>
+        </div>
+        <div class="heatmap-count" id="heatmap-count"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BONUS -->
+  <div id="tab-bonus" style="display:none">
+    <div class="section">
+      <div class="section-title"><span class="dot" style="background:var(--accent)"></span>הפתעה!</div>
+      <button class="surprise-btn" onclick="surpriseMe()">🎲 הפתע אותי – משחק אקראי מההיסטוריה</button>
+    </div>
+
+    <div class="section">
+      <div class="section-title"><span class="dot" style="background:#7c3aed"></span>כרטיס ה-DNA שלי</div>
+      <div class="dna-card-box">
+        <div id="dna-preview" class="dna-preview"></div>
+        <button class="dna-generate-btn" id="dna-generate-btn" onclick="generateAndShowDNACard()">✨ צור כרטיס DNA</button>
+        <button class="share-btn dna-share-btn" id="dna-share-btn" onclick="shareDNACard()" style="display:none">📤 שתף / שמור</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title"><span class="dot" style="background:var(--yellow)"></span>הישגים</div>
+      <div class="badges-grid" id="badges-grid"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title"><span class="dot" style="background:var(--green)"></span>נחשו את התוצאה</div>
+      <div class="mini-grid quiz-stats-grid" id="quiz-stats"></div>
+      <div class="quiz-card" id="quiz-card"></div>
     </div>
   </div>
 
@@ -671,12 +799,14 @@ function switchTab(id, btn) {
   document.querySelectorAll('.tab').forEach(el=>el.classList.remove('active'));
   document.getElementById('tab-'+id).style.display='block';
   btn.classList.add('active');
+  if (id === 'journey') startGlobe(); else stopGlobe();
 }
 
 function renderAll() {
   updateStats(); populateFilters(); renderMatches(state.matches);
   renderSeasons(); renderCharts(); renderScorers(state.scorers);
   renderJourney(); renderOdometer(); renderDramaIndex(); renderOnThisDay();
+  renderHeatmap(); renderBadges(); renderQuiz();
 }
 
 function updateStats() {
@@ -782,6 +912,7 @@ function buildMatchCard(m, i) {
   const hasReferee = m.referee && m.referee !== 'None' && m.referee.trim();
   const hasBonus = m.bonus && m.bonus !== 'None' && m.bonus.trim();
   const hasRound = m.round && m.round !== 'None' && m.round.trim();
+  const recap = generateRecap(m);
 
   const detailGrid = `
     <div class="detail-grid">
@@ -794,6 +925,7 @@ function buildMatchCard(m, i) {
     </div>
     ${hasScorers ? `<div class="detail-full"><div class="detail-label">⚽ כובשים לב"ש</div><div class="detail-value">${m.scorers}</div></div>` : ''}
     ${hasBonus ? `<div class="bonus-box"><span class="star">⭐</span><span class="text">${m.bonus}</span></div>` : ''}
+    ${recap ? `<div class="recap-box"><div class="recap-label">📰 סיכום המשחק</div><div class="recap-text">${recap}</div></div>` : ''}
     <div class="match-photo-wrap" data-date="${m.date}" data-fallback="${(STADIUM_IMAGES[m.stadium]||'').replace(/"/g,'&quot;')}" style="width:100%;height:150px;overflow:hidden;border-radius:10px;margin-top:8px;background:#1c1c26"></div>
   `;
 
@@ -1386,6 +1518,512 @@ function clearFilters() {
 
 function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3000); }
 
+// ── SHARED HELPERS ───────────────────────────────────────────────────────────
+function computeOpponentStats() {
+  const map = {};
+  state.matches.forEach(m => {
+    const r = getResult(m);
+    if (r.cls === 'neutral' || !r.cls) return;
+    const opp = (m.home === MY_TEAM || m.home === ISRAEL_TEAM) ? m.away : m.home;
+    if (!opp) return;
+    if (!map[opp]) map[opp] = { w: 0, d: 0, l: 0 };
+    map[opp][r.cls[0]]++;
+  });
+  return Object.entries(map).map(([name, s]) => {
+    const matches = s.w + s.d + s.l;
+    return { name, matches, w: s.w, d: s.d, l: s.l, winPct: matches ? Math.round(s.w / matches * 100) : 0 };
+  });
+}
+function jumpToMatchByDate(date) {
+  const idx = state.matches.findIndex(m => m.date === date);
+  if (idx < 0) return;
+  clearFilters();
+  const btn = document.getElementById('tab-btn-matches');
+  switchTab('matches', btn);
+  setTimeout(() => {
+    const card = document.querySelectorAll('#match-list .match-card')[idx];
+    if (card) toggleCard(card);
+  }, 50);
+}
+
+// ── RANDOMIZER ────────────────────────────────────────────────────────────────
+function surpriseMe() {
+  if (!state.matches.length) return;
+  const idx = Math.floor(Math.random() * state.matches.length);
+  clearFilters();
+  const btn = document.getElementById('tab-btn-matches');
+  switchTab('matches', btn);
+  setTimeout(() => {
+    const card = document.querySelectorAll('#match-list .match-card')[idx];
+    if (card) { toggleCard(card); showToast('🎲 חזרה בזמן!'); }
+  }, 50);
+}
+
+// ── UNLOCKABLE BADGES ─────────────────────────────────────────────────────────
+function computeBadges() {
+  const j = computeJourney();
+  const o = computeOdometer();
+  const rivals = computeOpponentStats().filter(x => x.matches >= 3);
+  const topRival = rivals.slice().sort((a, b) => b.matches - a.matches)[0];
+  const seasonsCount = state.seasons.length;
+  const totalGoals = state.matches.reduce((sum, m) => {
+    const r = getResult(m);
+    return (r.cls && r.cls !== 'neutral') ? sum + (r.myGoals || 0) + (r.oppGoals || 0) : sum;
+  }, 0);
+  const finalsAttended = state.matches.filter(m => /^גמר(\s|$)/.test((m.round || '').trim())).length;
+  const nightGames = state.matches.filter(m => {
+    const h = parseInt((m.time || '').split(':')[0]);
+    return !isNaN(h) && h >= 20;
+  }).length;
+  const countriesCount = Object.keys(j.countryMap).filter(c => c !== 'IL').length;
+
+  const list = [
+    { emoji: '💯', name: 'מאה קרב', desc: 'עברת את משוכת ה-100', need: 100, have: j.totalAll, unit: 'משחקים' },
+    { emoji: '🔥', name: 'רצף אש', desc: 'רצף ניצחונות מרשים', need: 5, have: j.longestWin, unit: 'ניצחונות רצופים' },
+    { emoji: '🛡️', name: 'בלתי מנוצח', desc: 'רצף ארוך בלי הפסד', need: 10, have: j.longestUnbeaten, unit: 'משחקים ללא הפסד' },
+    { emoji: '🌍', name: 'גלובטרוטר', desc: 'אספת דגלים בעולם', need: 5, have: countriesCount, unit: 'מדינות' },
+    { emoji: '✈️', name: 'טייס ותיק', desc: 'טסת מרחקים עצומים', need: 20000, have: Math.round(o.roundTrip), unit: 'ק"מ' },
+    { emoji: '📅', name: 'אוהד ותיק', desc: 'עונות רצופות של מעקב', need: 10, have: seasonsCount, unit: 'עונות' },
+    { emoji: '🏆', name: 'צייד גביעים', desc: 'היית בגמר גביע', need: 1, have: finalsAttended, unit: 'גמרים' },
+    { emoji: '⚽', name: 'צופה שערים', desc: 'ראית המון שערים', need: 1000, have: totalGoals, unit: 'שערים' },
+    { emoji: '👑', name: 'יריב מושבע', desc: 'דרבי אחרי דרבי', need: 15, have: topRival ? topRival.matches : 0, unit: topRival ? `משחקים נגד ${topRival.name}` : 'משחקים נגד אותו יריב' },
+    { emoji: '🌙', name: 'ינשוף לילה', desc: 'משחקי ערב מאוחרים', need: 50, have: nightGames, unit: 'משחקי ערב' },
+  ];
+  return list.map(b => ({ ...b, unlocked: b.have >= b.need, pct: Math.max(4, Math.min(100, Math.round(b.have / b.need * 100))) }));
+}
+function renderBadges() {
+  const el = document.getElementById('badges-grid');
+  if (!el) return;
+  const badges = computeBadges();
+  el.innerHTML = badges.map(b => `
+    <div class="badge-tile ${b.unlocked ? 'unlocked' : 'locked'}">
+      <div class="badge-tile-emoji">${b.unlocked ? b.emoji : '🔒'}</div>
+      <div class="badge-tile-name">${b.name}</div>
+      <div class="badge-tile-desc">${b.desc}</div>
+      <div class="badge-tile-track"><div class="badge-tile-fill" style="width:${b.pct}%"></div></div>
+      <div class="badge-tile-stat">${b.have.toLocaleString()} / ${b.need.toLocaleString()} ${b.unit}</div>
+    </div>`).join('');
+}
+
+// ── PREDICTION QUIZ ───────────────────────────────────────────────────────────
+let quizState = { match: null, revealed: false };
+function loadQuizStats() {
+  try { return JSON.parse(localStorage.getItem('quizStats')) || { attempts: 0, exact: 0, outcome: 0, streak: 0, best: 0 }; }
+  catch (e) { return { attempts: 0, exact: 0, outcome: 0, streak: 0, best: 0 }; }
+}
+function saveQuizStats(s) { try { localStorage.setItem('quizStats', JSON.stringify(s)); } catch (e) {} }
+function newQuizQuestion() {
+  const pool = state.matches.filter(m => { const r = getResult(m); return r.cls && r.cls !== 'neutral' && m.result; });
+  if (!pool.length) return;
+  let m;
+  do { m = pool[Math.floor(Math.random() * pool.length)]; } while (pool.length > 1 && m === quizState.match);
+  quizState = { match: m, revealed: false };
+  renderQuiz();
+}
+function submitQuizGuess() {
+  const m = quizState.match;
+  if (!m || quizState.revealed) return;
+  const homeGuess = parseInt(document.getElementById('quiz-home-input').value);
+  const awayGuess = parseInt(document.getElementById('quiz-away-input').value);
+  if (isNaN(homeGuess) || isNaN(awayGuess)) { showToast('נא להזין ניחוש תקין'); return; }
+  const parts = m.result.split('-');
+  const realAway = parseInt(parts[0]), realHome = parseInt(parts[1]);
+  const exact = homeGuess === realHome && awayGuess === realAway;
+  const guessOutcome = homeGuess > awayGuess ? 'home' : homeGuess < awayGuess ? 'away' : 'draw';
+  const realOutcome = realHome > realAway ? 'home' : realHome < realAway ? 'away' : 'draw';
+  const outcomeRight = guessOutcome === realOutcome;
+
+  const stats = loadQuizStats();
+  stats.attempts++;
+  if (exact) stats.exact++;
+  if (outcomeRight) { stats.outcome++; stats.streak++; stats.best = Math.max(stats.best, stats.streak); }
+  else stats.streak = 0;
+  saveQuizStats(stats);
+
+  quizState.revealed = true;
+  quizState.exact = exact;
+  quizState.outcomeRight = outcomeRight;
+  renderQuiz();
+}
+function renderQuiz() {
+  const el = document.getElementById('quiz-card');
+  if (!el) return;
+  const stats = loadQuizStats();
+  const statsEl = document.getElementById('quiz-stats');
+  if (statsEl) statsEl.innerHTML = `
+    <div class="mini-card"><div class="mini-title">🎯 בול</div><div class="mini-value">${stats.exact}</div></div>
+    <div class="mini-card"><div class="mini-title">✅ כיוון נכון</div><div class="mini-value">${stats.attempts ? Math.round(stats.outcome / stats.attempts * 100) : 0}%</div></div>
+    <div class="mini-card"><div class="mini-title">🔥 רצף נוכחי</div><div class="mini-value">${stats.streak}</div></div>
+    <div class="mini-card"><div class="mini-title">👑 שיא</div><div class="mini-value">${stats.best}</div></div>
+  `;
+  const m = quizState.match;
+  if (!m) { el.innerHTML = '<button class="quiz-btn" onclick="newQuizQuestion()">🔮 התחל ניחוש</button>'; return; }
+  if (!quizState.revealed) {
+    el.innerHTML = `
+      <div class="quiz-match">${teamLogo(m.home)}<b>${m.home}</b><span>נגד</span><b>${m.away}</b>${teamLogo(m.away)}</div>
+      <div class="quiz-meta">${formatDate(m.date)} · ${m.stadium || ''} · ${m.framework || ''}</div>
+      <div class="quiz-inputs">
+        <div class="quiz-input-group"><div class="quiz-input-label">${m.home}</div><input type="number" id="quiz-home-input" class="quiz-input" placeholder="0" min="0"></div>
+        <div class="quiz-vs">–</div>
+        <div class="quiz-input-group"><div class="quiz-input-label">${m.away}</div><input type="number" id="quiz-away-input" class="quiz-input" placeholder="0" min="0"></div>
+      </div>
+      <button class="quiz-btn" onclick="submitQuizGuess()">✅ נחש!</button>
+    `;
+  } else {
+    const resultClass = quizState.exact ? 'exact' : quizState.outcomeRight ? 'partial' : 'miss';
+    const resultText = quizState.exact ? '🎯 בול! ניחשת בדיוק!' : quizState.outcomeRight ? '👍 כיוון נכון, לא בול' : '❌ טעות הפעם';
+    el.innerHTML = `
+      <div class="quiz-match">${teamLogo(m.home)}<b>${m.home}</b><span>נגד</span><b>${m.away}</b>${teamLogo(m.away)}</div>
+      <div class="quiz-meta">${formatDate(m.date)} · ${m.stadium || ''} · ${m.framework || ''}</div>
+      <div class="quiz-real-score">${m.result}</div>
+      <div class="quiz-result ${resultClass}">${resultText}</div>
+      <button class="quiz-btn" onclick="newQuizQuestion()">🔮 עוד שאלה</button>
+    `;
+  }
+}
+
+// ── ATTENDANCE HEATMAP ────────────────────────────────────────────────────────
+let heatmapYear = new Date().getFullYear();
+function pad2(n) { return String(n).padStart(2, '0'); }
+function dateKey(d) { return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`; }
+function computeCalendarWeeks(year) {
+  const start = new Date(year, 0, 1), end = new Date(year, 11, 31);
+  const gridStart = new Date(start); gridStart.setDate(gridStart.getDate() - gridStart.getDay());
+  const gridEnd = new Date(end); gridEnd.setDate(gridEnd.getDate() + (6 - gridEnd.getDay()));
+  const weeks = []; let week = [];
+  for (let d = new Date(gridStart); d <= gridEnd; d.setDate(d.getDate() + 1)) {
+    week.push(new Date(d));
+    if (week.length === 7) { weeks.push(week); week = []; }
+  }
+  return weeks;
+}
+function heatmapPrevYear() { heatmapYear--; renderHeatmap(); }
+function heatmapNextYear() { heatmapYear++; renderHeatmap(); }
+function renderHeatmap() {
+  const el = document.getElementById('heatmap-grid');
+  if (!el) return;
+  const yearLabel = document.getElementById('heatmap-year');
+  if (yearLabel) yearLabel.textContent = heatmapYear;
+
+  const byDate = {};
+  state.matches.forEach(m => {
+    if (!m.date || !m.date.startsWith(String(heatmapYear))) return;
+    byDate[m.date] = { match: m, cls: getResult(m).cls };
+  });
+
+  const weeks = computeCalendarWeeks(heatmapYear);
+  let matchCount = 0;
+  el.innerHTML = weeks.map(week => {
+    const cells = week.map(d => {
+      if (d.getFullYear() !== heatmapYear) return `<div class="hm-cell hm-empty"></div>`;
+      const ds = dateKey(d);
+      const day = byDate[ds];
+      if (!day) return `<div class="hm-cell hm-none"></div>`;
+      matchCount++;
+      const cls = day.cls === 'win' ? 'hm-win' : day.cls === 'loss' ? 'hm-loss' : day.cls === 'draw' ? 'hm-draw' : 'hm-neutral';
+      const label = (`${ds} · ${day.match.home} נגד ${day.match.away} · ${day.match.result || ''}`).replace(/"/g, '&quot;');
+      return `<div class="hm-cell ${cls}" title="${label}" onclick="jumpToMatchByDate('${ds}')"></div>`;
+    }).join('');
+    return `<div class="hm-week">${cells}</div>`;
+  }).join('');
+
+  const countEl = document.getElementById('heatmap-count');
+  if (countEl) countEl.textContent = matchCount + ' משחקים בשנת ' + heatmapYear;
+}
+
+// ── AI-STYLE MATCH RECAP (rule-based, deterministic per match) ────────────────
+function seededRandom(seed) {
+  let h = 0;
+  for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) | 0;
+  return function () { h = (h * 1103515245 + 12345) | 0; return ((h >>> 0) % 1000) / 1000; };
+}
+function pickOne(rng, arr) { return arr[Math.floor(rng() * arr.length)]; }
+function generateRecap(m) {
+  const r = getResult(m);
+  if (!r.cls || r.cls === 'neutral') return '';
+  const rng = seededRandom(m.date + m.home + m.away);
+  const goals = parseScorerMinutes(m.scorers);
+  const allGoals = goals.flatMap(g => g.minutes.map(min => ({ name: g.name, min }))).sort((a, b) => a.min - b.min);
+  const lateGoal = allGoals.some(g => g.min >= 85);
+  const penalties = /\(/.test(m.result || '');
+  const bigCrowd = m.attendance && m.attendance >= 15000;
+
+  const openers = [
+    `ב-${formatDate(m.date)}, ${m.stadium || 'האצטדיון'} התמלא לקראת ${m.home} נגד ${m.away}.`,
+    `יום ${m.day || ''}, ${formatDate(m.date)} — עוד משחק במסגרת ${m.framework || 'התחרות'}: ${m.home} מול ${m.away}.`,
+    `הזירה: ${m.stadium || '-'}. המשחק: ${m.home} נגד ${m.away}, ${formatDate(m.date)}.`,
+  ];
+
+  let scoringLines = [];
+  if (allGoals.length) {
+    const phrases = [
+      g => `${g.name} שלח כדור לרשת בדקה ${g.min}'`,
+      g => `בדקה ${g.min}' ${g.name} רשם את שמו על לוח התוצאות`,
+      g => `${g.name} לא היסס וכבש בדקה ${g.min}'`,
+    ];
+    scoringLines = allGoals.slice(0, 4).map(g => pickOne(rng, phrases)(g));
+  } else if ((r.myGoals || 0) + (r.oppGoals || 0) === 0) {
+    scoringLines = [pickOne(rng, ['שני הצדדים נעלו את ההגנות ולא הצליחו לפרוץ את הרשת.', 'המשחק ננעל על 0-0, קרב טקטי בלי שערים.'])];
+  }
+
+  const outcomeLines = {
+    win: [`בסוף – ניצחון! ${m.result}, ולב שבע שוב חוגגת.`, `התוצאה הסופית ${m.result} – ניצחון מתוק לצהובים-שחורים.`, `${m.result} – עוד שלוש נקודות חשובות בכיס.`],
+    loss: [`התוצאה הסופית ${m.result} – ערב קשה לאוהדים.`, `${m.result} – הפעם זה לא הסתדר, אבל תמיד יש את המשחק הבא.`, `לצער האוהדים, ${m.result} – הפסד כואב.`],
+    draw: [`המשחק נגמר בתיקו ${m.result} – נקודה שמתחלקת בין הצדדים.`, `${m.result} – תיקו הוגן, אף צד לא הצליח להכריע.`],
+  };
+
+  const flourishes = [];
+  if (lateGoal) flourishes.push(pickOne(rng, ['דרמה עד השריקה האחרונה!', 'שער מאוחר שהפך הכל.']));
+  if (penalties) flourishes.push('הכל הוכרע בדקת הפנדלים המתוחה.');
+  if (bigCrowd) flourishes.push(`${Number(m.attendance).toLocaleString()} צופים היו עדים למתרחש.`);
+
+  return [pickOne(rng, openers), ...scoringLines, pickOne(rng, outcomeLines[r.cls] || []), ...flourishes].filter(Boolean).join(' ');
+}
+
+// ── FAN DNA SHAREABLE CARD ────────────────────────────────────────────────────
+function computeFanDNA() {
+  const j = computeJourney();
+  const o = computeOdometer();
+  const rivals = computeOpponentStats().filter(x => x.matches >= 3);
+  const nemesis = rivals.slice().sort((a, b) => a.winPct - b.winPct)[0];
+  const luckyTeam = rivals.slice().sort((a, b) => b.winPct - a.winPct)[0];
+  const topScorer = state.scorers[0];
+  const countries = Object.keys(j.countryMap).filter(c => c !== 'IL').length;
+  return {
+    total: j.totalAll, wins: j.wins, draws: j.draws, losses: j.losses,
+    longestWin: j.longestWin, longestUnbeaten: j.longestUnbeaten,
+    nemesis, luckyTeam, topScorer, km: Math.round(o.roundTrip), countries,
+  };
+}
+function roundRectPath(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
+async function drawFanDNACard() {
+  try { await document.fonts.ready; } catch (e) {}
+  const dna = computeFanDNA();
+  const W = 1080, H = 1920;
+  const canvas = document.createElement('canvas');
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  const bg = ctx.createLinearGradient(0, 0, W, H);
+  bg.addColorStop(0, '#0d0d16'); bg.addColorStop(1, '#1a1030');
+  ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+  const glow = ctx.createRadialGradient(W * 0.8, H * 0.1, 50, W * 0.8, H * 0.1, 700);
+  glow.addColorStop(0, 'rgba(124,58,237,0.35)'); glow.addColorStop(1, 'rgba(124,58,237,0)');
+  ctx.fillStyle = glow; ctx.fillRect(0, 0, W, H);
+
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#e8e8f0';
+  ctx.font = '900 60px Heebo, sans-serif';
+  ctx.fillText('ה-DNA הכדורגלי שלי', W / 2, 170);
+  ctx.font = '700 32px Heebo, sans-serif';
+  ctx.fillStyle = '#8a8aa0';
+  ctx.fillText('הפועל באר שבע · מאז 2008', W / 2, 225);
+
+  ctx.font = '900 210px Heebo, sans-serif';
+  const grad = ctx.createLinearGradient(W / 2 - 200, 0, W / 2 + 200, 0);
+  grad.addColorStop(0, '#4f7dff'); grad.addColorStop(1, '#7c3aed');
+  ctx.fillStyle = grad;
+  ctx.fillText(String(dna.total), W / 2, 450);
+  ctx.font = '700 36px Heebo, sans-serif';
+  ctx.fillStyle = '#8a8aa0';
+  ctx.fillText('משחקים באיצטדיון', W / 2, 505);
+
+  const wdl = [{ v: dna.wins, l: 'ניצחונות', c: '#10d98a' }, { v: dna.draws, l: 'תיקו', c: '#ffd32a' }, { v: dna.losses, l: 'הפסדים', c: '#ff4757' }];
+  const wdlY = 620;
+  wdl.forEach((x, i) => {
+    const cx = W / 2 + (i - 1) * 300;
+    ctx.font = '900 66px Heebo, sans-serif'; ctx.fillStyle = x.c;
+    ctx.fillText(String(x.v), cx, wdlY);
+    ctx.font = '600 28px Heebo, sans-serif'; ctx.fillStyle = '#8a8aa0';
+    ctx.fillText(x.l, cx, wdlY + 42);
+  });
+
+  function statCard(y, emoji, label, value, sub) {
+    const cardX = 90, cardW = W - 180, cardH = 160;
+    ctx.fillStyle = 'rgba(255,255,255,0.05)';
+    roundRectPath(ctx, cardX, y, cardW, cardH, 24); ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.09)'; ctx.lineWidth = 2;
+    roundRectPath(ctx, cardX, y, cardW, cardH, 24); ctx.stroke();
+    ctx.textAlign = 'right';
+    ctx.font = '60px Heebo, sans-serif'; ctx.fillStyle = '#e8e8f0';
+    ctx.fillText(emoji, W - 130, y + 100);
+    ctx.font = '600 28px Heebo, sans-serif'; ctx.fillStyle = '#8a8aa0';
+    ctx.fillText(label, W - 215, y + 52);
+    ctx.font = '900 44px Heebo, sans-serif'; ctx.fillStyle = '#e8e8f0';
+    ctx.fillText(value, W - 215, y + 102);
+    if (sub) { ctx.font = '600 24px Heebo, sans-serif'; ctx.fillStyle = '#8a8aa0'; ctx.fillText(sub, W - 215, y + 136); }
+    ctx.textAlign = 'center';
+  }
+
+  let y = 690;
+  statCard(y, '🔥', 'רצף הניצחונות הכי ארוך', String(dna.longestWin), `${dna.longestUnbeaten} משחקים ללא הפסד`); y += 180;
+  if (dna.nemesis) { statCard(y, '😈', 'הנמסיס שלי', dna.nemesis.name, `${dna.nemesis.winPct}% ניצחונות ב-${dna.nemesis.matches} משחקים`); y += 180; }
+  if (dna.luckyTeam) { statCard(y, '🍀', 'קמע ההצלחה', dna.luckyTeam.name, `${dna.luckyTeam.winPct}% ניצחונות ב-${dna.luckyTeam.matches} משחקים`); y += 180; }
+  if (dna.topScorer) { statCard(y, '⚽', 'הכובש המוביל', dna.topScorer.name, `${dna.topScorer.goals} שערים`); y += 180; }
+  statCard(y, '✈️', "קילומטראז' הדרך", dna.km.toLocaleString() + ' ק"מ', `ביקרתי ב-${dna.countries} מדינות`);
+
+  ctx.font = '700 30px Heebo, sans-serif';
+  ctx.fillStyle = '#4f7dff';
+  ctx.fillText('stav-hbs.vercel.app', W / 2, H - 70);
+
+  return canvas;
+}
+let dnaCanvas = null;
+async function generateAndShowDNACard() {
+  const btn = document.getElementById('dna-generate-btn');
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ יוצר כרטיס...'; }
+  const canvas = await drawFanDNACard();
+  dnaCanvas = canvas;
+  const preview = document.getElementById('dna-preview');
+  if (preview) {
+    preview.innerHTML = '';
+    canvas.style.width = '100%';
+    canvas.style.borderRadius = '16px';
+    canvas.style.display = 'block';
+    preview.appendChild(canvas);
+  }
+  const shareBtn = document.getElementById('dna-share-btn');
+  if (shareBtn) shareBtn.style.display = 'flex';
+  if (btn) { btn.disabled = false; btn.textContent = '✨ צור כרטיס מחדש'; }
+}
+function shareDNACard() {
+  if (!dnaCanvas) return;
+  dnaCanvas.toBlob(async blob => {
+    const file = new File([blob], 'fan-dna.png', { type: 'image/png' });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      try { await navigator.share({ files: [file], title: 'ה-DNA הכדורגלי שלי', text: 'תראו את הסטטיסטיקות שלי כאוהד הפועל באר שבע! 🔴⚫' }); return; } catch (e) {}
+    }
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'fan-dna.png';
+    document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(url);
+    showToast('💾 הכרטיס הורד!');
+  }, 'image/png');
+}
+
+// ── VISITED-STADIUMS GLOBE (hand-rolled 2D canvas, no external libs) ──────────
+let globeRotation = 0, globeDragging = false, globeLastX = 0, globeAutoRotate = true, globeAnimHandle = null;
+let globePins = [], globeProjectedPins = [];
+function computeGlobePins() {
+  const pins = [{ name: 'ישראל', flag: '🇮🇱', lat: HOME_COORDS[0], lon: HOME_COORDS[1], home: true }];
+  const j = computeJourney();
+  Object.keys(j.countryMap).forEach(code => {
+    if (code === 'IL') return;
+    const c = j.countryMap[code];
+    const coordsList = c.stadiums.map(s => STADIUM_COORDS[s]).filter(Boolean);
+    if (!coordsList.length) return;
+    const lat = coordsList.reduce((s, cc) => s + cc[0], 0) / coordsList.length;
+    const lon = coordsList.reduce((s, cc) => s + cc[1], 0) / coordsList.length;
+    const meta = COUNTRY_META[code] || { name: code, flag: '🏳️' };
+    pins.push({ name: meta.name, flag: meta.flag, lat, lon, matches: c.matches, stadiums: c.stadiums.length });
+  });
+  return pins;
+}
+function projectGlobePoint(lat, lon, theta, R) {
+  const latR = lat * Math.PI / 180, lonR = lon * Math.PI / 180;
+  const x = R * Math.cos(latR) * Math.sin(lonR);
+  const y = -R * Math.sin(latR);
+  const z = R * Math.cos(latR) * Math.cos(lonR);
+  return { x: x * Math.cos(theta) + z * Math.sin(theta), y, z: -x * Math.sin(theta) + z * Math.cos(theta) };
+}
+function drawGlobe() {
+  const canvas = document.getElementById('globe-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const size = canvas.clientWidth;
+  if (!size) return;
+  if (canvas.width !== Math.round(size * dpr)) { canvas.width = Math.round(size * dpr); canvas.height = Math.round(size * dpr); }
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, size, size);
+
+  const cx = size / 2, cy = size / 2, R = size * 0.38;
+  const theta = globeRotation * Math.PI / 180;
+
+  const sphereGrad = ctx.createRadialGradient(cx - R * 0.35, cy - R * 0.35, R * 0.1, cx, cy, R);
+  sphereGrad.addColorStop(0, '#2a3a5c'); sphereGrad.addColorStop(0.6, '#141b2e'); sphereGrad.addColorStop(1, '#0a0a12');
+  ctx.fillStyle = sphereGrad;
+  ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.fill();
+
+  ctx.strokeStyle = 'rgba(79,125,255,0.28)'; ctx.lineWidth = 1;
+  for (let lon = -180; lon < 180; lon += 30) {
+    ctx.beginPath(); let started = false;
+    for (let lat = -90; lat <= 90; lat += 5) {
+      const p = projectGlobePoint(lat, lon, theta, R);
+      if (p.z < 0) { started = false; continue; }
+      const x = cx + p.x, y = cy + p.y;
+      if (!started) { ctx.moveTo(x, y); started = true; } else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+  }
+  for (let lat = -60; lat <= 60; lat += 30) {
+    ctx.beginPath(); let started = false;
+    for (let lon = -180; lon <= 180; lon += 5) {
+      const p = projectGlobePoint(lat, lon, theta, R);
+      if (p.z < 0) { started = false; continue; }
+      const x = cx + p.x, y = cy + p.y;
+      if (!started) { ctx.moveTo(x, y); started = true; } else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+  }
+
+  ctx.strokeStyle = 'rgba(124,58,237,0.45)'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.stroke();
+
+  const projected = globePins.map(p => ({ ...p, ...projectGlobePoint(p.lat, p.lon, theta, R) })).sort((a, b) => a.z - b.z);
+  projected.forEach(p => {
+    if (p.z < -R * 0.2) return;
+    const scale = 0.5 + 0.5 * (p.z + R) / (2 * R);
+    const x = cx + p.x, y = cy + p.y;
+    ctx.beginPath();
+    ctx.arc(x, y, (p.home ? 7 : 5.5) * scale, 0, Math.PI * 2);
+    ctx.fillStyle = p.home ? '#10d98a' : '#ffd32a';
+    ctx.globalAlpha = 0.4 + 0.6 * scale;
+    ctx.fill();
+    ctx.globalAlpha = 1;
+    ctx.strokeStyle = '#0a0a0f'; ctx.lineWidth = 2; ctx.stroke();
+  });
+  globeProjectedPins = projected;
+}
+function globeTick() {
+  if (globeAutoRotate && !globeDragging) globeRotation += 0.25;
+  drawGlobe();
+  globeAnimHandle = requestAnimationFrame(globeTick);
+}
+function initGlobe() {
+  const canvas = document.getElementById('globe-canvas');
+  if (!canvas || canvas.dataset.inited) return;
+  canvas.dataset.inited = '1';
+  globePins = computeGlobePins();
+  canvas.addEventListener('pointerdown', e => { globeDragging = true; globeLastX = e.clientX; globeAutoRotate = false; });
+  window.addEventListener('pointerup', () => { globeDragging = false; });
+  window.addEventListener('pointermove', e => {
+    if (!globeDragging) return;
+    globeRotation += (e.clientX - globeLastX) * 0.5;
+    globeLastX = e.clientX;
+  });
+  canvas.addEventListener('click', e => {
+    const rect = canvas.getBoundingClientRect();
+    const clickX = e.clientX - rect.left, clickY = e.clientY - rect.top;
+    const hit = globeProjectedPins.slice().reverse().find(p => {
+      if (p.z < -canvas.clientWidth * 0.08) return false;
+      const px = canvas.clientWidth / 2 + p.x, py = canvas.clientWidth / 2 + p.y;
+      return Math.hypot(clickX - px, clickY - py) < 16;
+    });
+    if (hit) showToast(`${hit.flag} ${hit.name} — ${hit.home ? 'הבית שלי' : (hit.stadiums + ' איצטדיונים, ' + hit.matches + ' משחקים')}`);
+  });
+}
+function startGlobe() { initGlobe(); if (!globeAnimHandle) globeTick(); }
+function stopGlobe() { if (globeAnimHandle) { cancelAnimationFrame(globeAnimHandle); globeAnimHandle = null; } }
 
 // ── CLOUD SYNC ────────────────────────────────────────────────────────────────
 const API_URL = '/api/data';
