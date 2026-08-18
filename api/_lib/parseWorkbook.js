@@ -77,11 +77,11 @@ export function parseWorkbook(buffer) {
     const r = rows[i];
     if (!r[0]) continue;
     matches.push({
-      home: String(r[0] || "").trim(), away: String(r[1] || "").trim(), date: parseDateCell(r[2]), day: String(r[3] || "").trim(),
-      time: parseTimeCell(r[4]), framework: String(r[5] || "").trim(), round: String(r[6] || "").trim(), result: String(r[7] || "").trim(),
-      stadium: String(r[8] || "").trim(), attendance: typeof r[9] === "number" ? Math.round(r[9]) : 0,
-      scorers: String(r[10] || "").trim(), referee: String(r[11] || "").trim(), bonus: String(r[12] || "").trim(),
-      lineup: String(r[13] || "").trim(),
+      home: String(r[0] || "").trim(), away: String(r[1] || "").trim(), date: parseDateCell(r[2]), day: String(r[4] || "").trim(),
+      time: parseTimeCell(r[5]), framework: String(r[6] || "").trim(), round: String(r[7] || "").trim(), result: String(r[8] || "").trim(),
+      stadium: String(r[9] || "").trim(), attendance: typeof r[10] === "number" ? Math.round(r[10]) : 0,
+      scorers: String(r[11] || "").trim(), referee: String(r[12] || "").trim(), bonus: String(r[13] || "").trim(),
+      lineup: String(r[14] || "").trim(),
     });
   }
   if (matches.length === 0) throw new Error("לא נמצאו משחקים בגיליון סיכום");
