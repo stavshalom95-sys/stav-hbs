@@ -288,10 +288,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .heatmap-legend .hm-cell{width:10px;height:10px;}
 .heatmap-count{text-align:center;font-size:11px;color:var(--muted);margin-top:8px;}
 
-/* recap box */
-.recap-box{background:rgba(79,125,255,0.06);border:1px solid rgba(79,125,255,0.2);border-radius:10px;padding:10px 12px;margin-top:8px;}
-.recap-box .recap-label{font-size:10px;color:var(--accent);font-weight:800;margin-bottom:4px;}
-.recap-box .recap-text{font-size:12px;line-height:1.6;color:var(--text);}
+/* lineup box */
+.lineup-box{background:rgba(79,125,255,0.06);border:1px solid rgba(79,125,255,0.2);border-radius:10px;padding:10px 12px;margin-top:8px;}
+.lineup-box .lineup-label{font-size:10px;color:var(--accent);font-weight:800;margin-bottom:4px;}
+.lineup-box .lineup-text{font-size:12px;line-height:1.6;color:var(--text);white-space:pre-line;}
 
 /* fan DNA card */
 .dna-card-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:14px;text-align:center;}
@@ -912,7 +912,7 @@ function buildMatchCard(m, i) {
   const hasReferee = m.referee && m.referee !== 'None' && m.referee.trim();
   const hasBonus = m.bonus && m.bonus !== 'None' && m.bonus.trim();
   const hasRound = m.round && m.round !== 'None' && m.round.trim();
-  const recap = generateRecap(m);
+  const hasLineup = m.lineup && m.lineup !== 'None' && m.lineup.trim();
 
   const detailGrid = `
     <div class="detail-grid">
@@ -925,7 +925,7 @@ function buildMatchCard(m, i) {
     </div>
     ${hasScorers ? `<div class="detail-full"><div class="detail-label">⚽ כובשים לב"ש</div><div class="detail-value">${m.scorers}</div></div>` : ''}
     ${hasBonus ? `<div class="bonus-box"><span class="star">⭐</span><span class="text">${m.bonus}</span></div>` : ''}
-    ${recap ? `<div class="recap-box"><div class="recap-label">📰 סיכום המשחק</div><div class="recap-text">${recap}</div></div>` : ''}
+    ${hasLineup ? `<div class="lineup-box"><div class="lineup-label">📋 הרכב פותח לב"ש</div><div class="lineup-text">${m.lineup}</div></div>` : ''}
     <div class="match-photo-wrap" data-date="${m.date}" data-fallback="${(STADIUM_IMAGES[m.stadium]||'').replace(/"/g,'&quot;')}" style="width:100%;height:150px;overflow:hidden;border-radius:10px;margin-top:8px;background:#1c1c26"></div>
   `;
 
@@ -1729,55 +1729,6 @@ function renderHeatmap() {
 
   const countEl = document.getElementById('heatmap-count');
   if (countEl) countEl.textContent = matchCount + ' משחקים בשנת ' + heatmapYear;
-}
-
-// ── AI-STYLE MATCH RECAP (rule-based, deterministic per match) ────────────────
-function seededRandom(seed) {
-  let h = 0;
-  for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) | 0;
-  return function () { h = (h * 1103515245 + 12345) | 0; return ((h >>> 0) % 1000) / 1000; };
-}
-function pickOne(rng, arr) { return arr[Math.floor(rng() * arr.length)]; }
-function generateRecap(m) {
-  const r = getResult(m);
-  if (!r.cls || r.cls === 'neutral') return '';
-  const rng = seededRandom(m.date + m.home + m.away);
-  const goals = parseScorerMinutes(m.scorers);
-  const allGoals = goals.flatMap(g => g.minutes.map(min => ({ name: g.name, min }))).sort((a, b) => a.min - b.min);
-  const lateGoal = allGoals.some(g => g.min >= 85);
-  const penalties = /\(/.test(m.result || '');
-  const bigCrowd = m.attendance && m.attendance >= 15000;
-
-  const openers = [
-    `ב-${formatDate(m.date)}, ${m.stadium || 'האצטדיון'} התמלא לקראת ${m.home} נגד ${m.away}.`,
-    `יום ${m.day || ''}, ${formatDate(m.date)} — עוד משחק במסגרת ${m.framework || 'התחרות'}: ${m.home} מול ${m.away}.`,
-    `הזירה: ${m.stadium || '-'}. המשחק: ${m.home} נגד ${m.away}, ${formatDate(m.date)}.`,
-  ];
-
-  let scoringLines = [];
-  if (allGoals.length) {
-    const phrases = [
-      g => `${g.name} שלח כדור לרשת בדקה ${g.min}'`,
-      g => `בדקה ${g.min}' ${g.name} רשם את שמו על לוח התוצאות`,
-      g => `${g.name} לא היסס וכבש בדקה ${g.min}'`,
-    ];
-    scoringLines = allGoals.slice(0, 4).map(g => pickOne(rng, phrases)(g));
-  } else if ((r.myGoals || 0) + (r.oppGoals || 0) === 0) {
-    scoringLines = [pickOne(rng, ['שני הצדדים נעלו את ההגנות ולא הצליחו לפרוץ את הרשת.', 'המשחק ננעל על 0-0, קרב טקטי בלי שערים.'])];
-  }
-
-  const outcomeLines = {
-    win: [`בסוף – ניצחון! ${m.result}, ולב שבע שוב חוגגת.`, `התוצאה הסופית ${m.result} – ניצחון מתוק לצהובים-שחורים.`, `${m.result} – עוד שלוש נקודות חשובות בכיס.`],
-    loss: [`התוצאה הסופית ${m.result} – ערב קשה לאוהדים.`, `${m.result} – הפעם זה לא הסתדר, אבל תמיד יש את המשחק הבא.`, `לצער האוהדים, ${m.result} – הפסד כואב.`],
-    draw: [`המשחק נגמר בתיקו ${m.result} – נקודה שמתחלקת בין הצדדים.`, `${m.result} – תיקו הוגן, אף צד לא הצליח להכריע.`],
-  };
-
-  const flourishes = [];
-  if (lateGoal) flourishes.push(pickOne(rng, ['דרמה עד השריקה האחרונה!', 'שער מאוחר שהפך הכל.']));
-  if (penalties) flourishes.push('הכל הוכרע בדקת הפנדלים המתוחה.');
-  if (bigCrowd) flourishes.push(`${Number(m.attendance).toLocaleString()} צופים היו עדים למתרחש.`);
-
-  return [pickOne(rng, openers), ...scoringLines, pickOne(rng, outcomeLines[r.cls] || []), ...flourishes].filter(Boolean).join(' ');
 }
 
 // ── FAN DNA SHAREABLE CARD ────────────────────────────────────────────────────
