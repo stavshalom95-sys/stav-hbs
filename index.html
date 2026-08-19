@@ -925,7 +925,7 @@ function buildMatchCard(m, i) {
     </div>
     ${hasScorers ? `<div class="detail-full"><div class="detail-label">⚽ כובשים לב"ש</div><div class="detail-value">${m.scorers}</div></div>` : ''}
     ${hasBonus ? `<div class="bonus-box"><span class="star">⭐</span><span class="text">${m.bonus}</span></div>` : ''}
-    ${hasLineup ? `<div class="lineup-box"><div class="lineup-label">📋 הרכב פותח לב"ש</div><div class="lineup-text">${m.lineup}</div></div>` : ''}
+    ${hasLineup ? `<div class="lineup-box"><div class="lineup-label">📋 הרכב פותח לב"ש</div><div class="lineup-text">${m.lineup.split(' / ').join('\n')}</div></div>` : ''}
     <div class="match-photo-wrap" data-date="${m.date}" data-fallback="${(STADIUM_IMAGES[m.stadium]||'').replace(/"/g,'&quot;')}" style="width:100%;height:150px;overflow:hidden;border-radius:10px;margin-top:8px;background:#1c1c26"></div>
   `;
 

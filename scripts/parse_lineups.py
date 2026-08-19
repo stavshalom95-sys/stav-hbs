@@ -8,20 +8,23 @@ Usage:
 
     Each argument may be either a full match URL
     (https://www.football.org.il/leagues/games/game/?game_id=NNNNNN) or a bare
-    game_id. For each match, prints the game_id followed by the 4-line lineup
-    block (see format notes below), ready to paste into the sheet.
+    game_id. For each match, prints the game_id followed by the single-line
+    lineup string (see format notes below), ready to paste into the sheet.
 
 Must run from a normal outbound environment (e.g. a developer machine or
 Claude's own sandbox) — football.org.il blocks Google Apps Script's outbound
 IPs with HTTP 403, so this cannot be run as a bound Apps Script function.
 
-Output format (exactly 4 lines, no position headers, no blank lines):
-    line 1: goalkeeper (short name only)
-    line 2: defenders, comma-separated
-    line 3: midfielders, comma-separated
-    line 4: forwards, comma-separated
+Output format: a single line, four position groups separated by " / "
+(no position headers):
+    group 1: goalkeeper (short name only)
+    group 2: defenders, comma-separated
+    group 3: midfielders, comma-separated
+    group 4: forwards, comma-separated
 A substitute is written in parentheses immediately after the starter they
-replaced, e.g. "ויטור (בלוריאן)".
+replaced, e.g. "ויטור (בלוריאן)". Kept on one line (rather than one cell
+line per group) so sheet rows stay compact; the dashboard reconstructs the
+per-group line breaks for display by splitting on " / ".
 
 Unknown players: if a starting-XI or substitute name isn't in NAME_MAP below,
 the script prints it as unmapped and exits non-zero. Ask the user for the
@@ -229,8 +232,8 @@ def build_lineup(starters, subs_raw):
     """
     starters: list of (raw_name, is_gk)
     subs_raw: {raw_out_name: raw_in_name}
-    Returns the 4-line formatted lineup string, or raises ParseError listing
-    any unmapped names.
+    Returns the single-line, " / "-separated lineup string, or raises
+    ParseError listing any unmapped names.
     """
     unmapped = set()
     groups = {pos: [] for pos in POSITION_ORDER}
@@ -271,7 +274,9 @@ def build_lineup(starters, subs_raw):
     lines = [gk_line]
     for pos in ("DEF", "MID", "ATT"):
         lines.append(", ".join(groups[pos]))
-    return "\n".join(lines)
+    while lines and lines[-1] == "":
+        lines.pop()
+    return " / ".join(lines)
 
 
 def process_match(arg: str) -> str:
