@@ -87,6 +87,7 @@ NAME_MAP = {
     "לוקאס מריאנו בריירו": ("בריירו", "MID"),
     "רועי גורדנה": ("גורדנה", "MID"),
     "יורי חוסה פיקנצ'ו מדיירוש": ("מדיירוש", "MID"),
+    "תומר יוספי": ("יוספי", "MID"),
     # ATT
     "אלון תורגמן": ("תורג'מן", "ATT"),
     "איגור זלאטנוביץ": ("זלאטנוביץ'", "ATT"),
@@ -188,7 +189,12 @@ NAME_NUM_RE = re.compile(r"([^\(]+)\(\d+\)")
 
 
 def _clean_player_text(raw: str) -> str:
+    # PlayerOut/PlayerIn divs carry a leading sr-only accessibility label
+    # ("יצא"/"נכנס") before the actual name — strip it, or it gets glued
+    # onto the name (e.g. "יצא רועי גורדנה") and silently fails to match
+    # the starter's real name, dropping the substitution entirely.
     text = re.sub(r"<[^>]+>", "", raw).strip()
+    text = re.sub(r"^(יצא|נכנס)\s*", "", text)
     m = NAME_NUM_RE.search(text)
     return (m.group(1) if m else text).strip()
 
