@@ -96,6 +96,91 @@ NAME_MAP = {
     "אילון אלמוג": ("אלמוג", "ATT"),
     "רותם חטואל": ("חטואל", "ATT"),
     "פול ארנולד גריטה": ("גריטה", "ATT"),
+    # GK (301-491 historical batch)
+    "אוהד לויטה": ("לויטה", "GK"),
+    "אריאל הרוש": ("הרוש", "GK"),
+    "ארנסטאס סטקוס": ("סטקוס", "GK"),
+    "עומרי גלזר": ("גלזר", "GK"),
+    # DEF (301-491 historical batch)
+    "אביב סולומון": ("סולומון", "DEF"),
+    "אוהד לביא": ("לביא", "DEF"),
+    "אור דדיה": ("דדיה", "DEF"),
+    "אורן ביטון": ("ביטון", "DEF"),
+    "איתן רצון": ("רצון", "DEF"),
+    "אמיר משה אריאלי": ("אריאלי", "DEF"),
+    "ארי מרנשטין": ("מרנשטיין", "DEF"),
+    "בן ביטון": ("ביטון", "DEF"),
+    "בן תורג'מן": ("תורג'מן", "DEF"),
+    "דודו טויטו": ("טויטו", "DEF"),
+    "דור אלו": ("אלו", "DEF"),
+    "הראל שלום": ("שלום", "DEF"),
+    "חאתם אלחמיד": ("אלחמיד", "DEF"),
+    "לואי טאהא": ("טאהא", "DEF"),
+    "מיחאלי קורהוט": ("קורהוט", "DEF"),
+    "מקסימו לוי": ("לוי", "DEF"),
+    "מתן אוחיון": ("אוחיון", "DEF"),
+    "ניב פליטר": ("פליטר", "DEF"),
+    "עבדול קודוס קוליבאלי": ("קוליבאלי", "DEF"),
+    "עמית ביטון": ("ביטון", "DEF"),
+    "שון גולדברג": ("גולדברג", "DEF"),
+    "שיר צדק": ("צדק", "DEF"),
+    "שמואל בנימין אליאס שיימן": ("שיימן", "DEF"),
+    # MID (301-491 historical batch)
+    "אוגוצ'וקאו ג'ון הוגו": ("אוגו", "MID"),
+    "איליי מדמון": ("מדמון", "MID"),
+    "אלטון אופיי אקולטסה": ("אקולטסה", "MID"),
+    "אנדרה ביוגו פוקו": ("פוקו", "MID"),
+    "אנדרה רנאטו סוארס מרטינס": ("מרטינס", "MID"),
+    "אריק סבו": ("סאבו", "MID"),
+    "ג'וז'ואה פליפה סוארס פסקאוורה": ("ג'וז'ואה", "MID"),
+    "ג'וליאן וויליאם סטואט": ("סטו", "MID"),
+    "ג'ימי וילצ'ז מארין": ("מארין", "MID"),
+    "גוסטבו מרמנטיני דוס סאנטוס": ("מרמנטיני", "MID"),
+    "גיא בדש": ("בדש", "MID"),
+    "דוד יאיר קלטינס": ("קלטינס", "MID"),
+    "דויד מרטינס סימאו": ("סימאו", "MID"),
+    "דור מיכה": ("מיכה", "MID"),
+    "דיינר אלכסנדר קיניונס": ("קיניונס", "MID"),
+    "דן איינבינדר": ("איינבינדר", "MID"),
+    "דנילו מורנו אספרייה": ("אספרייה", "MID"),
+    "ויירה רוסה פארליי": ("רוסה", "MID"),
+    "חן עזרא": ("עזרא", "MID"),
+    "חנן ממן": ("ממן", "MID"),
+    "כריסטופר פאול פטרסון": ("פטרסון", "MID"),
+    "מאגומד שאפי סוליימאנוב": ("סולימאנוב", "MID"),
+    "מאור מליקסון": ("מליקסון", "MID"),
+    "מיכאל אוחנה": ("אוחנה", "MID"),
+    "מרואן קבהא": ("קבהא", "MID"),
+    "נאור סבג": ("סבג", "MID"),
+    "ניב זריהן": ("זריהן", "MID"),
+    "נתנאל אסקיאס": ("אסקיאס", "MID"),
+    "סזאר מרסלו מלי": ("מרסלו מלי", "MID"),
+    "סינטאיהו סלליך": ("סלליך", "MID"),
+    "עדן שמיר": ("שמיר", "MID"),
+    "עומאר אולאד אימראן": ("עומאר", "MID"),
+    "פטרוצי דויד": ("פטרוצי", "MID"),
+    "קווין גיא-נואל פייר טפוקו": ("טפוקו", "MID"),
+    "קונסטנטין אדריאן פאון אלכסנדרו": ("פאון", "MID"),
+    "רועי גבריאל ממן": ("ממן", "MID"),
+    "רמזי ספורי": ("ספורי", "MID"),
+    "שגיב יחזקאל": ("יחזקאל", "MID"),
+    # ATT (301-491 historical batch)
+    "איתי שכטר": ("שכטר", "ATT"),
+    "אסטריט סלמאני": ("סלמאני", "ATT"),
+    "ארתור שושנאצב": ("שושנאצב", "ATT"),
+    "בן שהר": ("שהר", "ATT"),
+    "ג'ונתן אלכסנדר אגודלו ולאסקז": ("אגודלו", "ATT"),
+    "גטן אנתוני וורן": ("וארן", "ATT"),
+    "גיא מלמד": ("מלמד", "ATT"),
+    "דיא סבע": ("סבע", "ATT"),
+    "חוסה אנחל קאריו": ("קריו", "ATT"),
+    "יוג'ין אנסה": ("אנסה", "ATT"),
+    "נייג'ל האסלבנק": ("האסלבנק", "ATT"),
+    "ניקיטה רוקאביציה": ("רוקאביציה", "ATT"),
+    "עדן בן בסט": ("בן בסט", "ATT"),
+    "פטריק קלימלה": ("קלימלה", "ATT"),
+    "קייס גאנם": ("גאנם", "ATT"),
+    "תומר חמד": ("חמד", "ATT"),
     # Sub-only so far (no starting appearance seen yet; position unknown)
     "ג'וזף סבובו בנדה": ("סבובו", None),
 }
@@ -171,8 +256,11 @@ def parse_players(block_html: str):
 def parse_starting_xi(html: str, side: str):
     block = slice_block(html, side, "Active clearfix")
     players = parse_players(block)
-    if len(players) != 11:
-        raise ParseError(f"Expected 11 starters, found {len(players)}: {players}")
+    # Older archived matches occasionally have fewer than 11 names in the
+    # source page itself (a genuine gap in football.org.il's own data, not
+    # a parsing failure) — accept whatever count is present rather than
+    # blocking the whole match on it. The GK check stays strict since it's
+    # a much stronger signal that the block was sliced correctly.
     gk_count = sum(1 for _, is_gk in players if is_gk)
     if gk_count != 1:
         raise ParseError(f"Expected exactly 1 GK, found {gk_count}")
@@ -234,6 +322,22 @@ def map_name(raw_name: str):
     return entry
 
 
+# football.org.il's own placeholder for a player it has no name on file for
+# (confirmed by checking the player's profile page — it shows "*****" there
+# too, so this isn't recoverable from any page on the site). Shown as-is
+# rather than treated as an unmapped name requiring the user's input, since
+# there's nothing to map it to. Position is genuinely unknowable too (the
+# page doesn't encode per-player position anywhere), so these are collected
+# separately rather than guessed into DEF/MID/ATT — they get appended as a
+# trailing group instead. NOTE: if a single match has two or more anonymous
+# outfield players who are BOTH subbed off, sub pairing for them may be
+# wrong (subs_raw is keyed by raw name, and every anonymous starter shares
+# the same raw name "*****") — accepted as a rare edge case given their
+# identity is unknown either way.
+UNKNOWN_PLAYER_RAW = "*****"
+UNKNOWN_PLAYER_DISPLAY = "לא ידוע"
+
+
 def build_lineup(starters, subs_raw):
     """
     starters: list of (raw_name, is_gk)
@@ -243,9 +347,34 @@ def build_lineup(starters, subs_raw):
     """
     unmapped = set()
     groups = {pos: [] for pos in POSITION_ORDER}
+    unknown_list = []
     gk_line = None
 
+    def sub_in_display(sub_raw):
+        # Returns the sub-in player's short name, or None if it's an
+        # unmapped name that should block the whole match. The incoming
+        # sub can itself be the site's anonymous-player placeholder.
+        if sub_raw == UNKNOWN_PLAYER_RAW:
+            return UNKNOWN_PLAYER_DISPLAY
+        sub_mapped = map_name(sub_raw)
+        if sub_mapped is None:
+            unmapped.add(sub_raw)
+            return None
+        return sub_mapped[0]
+
     for raw_name, is_gk in starters:
+        if raw_name == UNKNOWN_PLAYER_RAW:
+            display = UNKNOWN_PLAYER_DISPLAY
+            if raw_name in subs_raw:
+                sub_short = sub_in_display(subs_raw[raw_name])
+                if sub_short is not None:
+                    display = f"{UNKNOWN_PLAYER_DISPLAY} ({sub_short})"
+            if is_gk:
+                gk_line = display
+            else:
+                unknown_list.append(display)
+            continue
+
         mapped = map_name(raw_name)
         if mapped is None:
             unmapped.add(raw_name)
@@ -257,12 +386,9 @@ def build_lineup(starters, subs_raw):
 
         display = short
         if raw_name in subs_raw:
-            sub_raw = subs_raw[raw_name]
-            sub_mapped = map_name(sub_raw)
-            if sub_mapped is None:
-                unmapped.add(sub_raw)
-            else:
-                display = f"{short} ({sub_mapped[0]})"
+            sub_short = sub_in_display(subs_raw[raw_name])
+            if sub_short is not None:
+                display = f"{short} ({sub_short})"
 
         if is_gk:
             gk_line = display
@@ -282,6 +408,8 @@ def build_lineup(starters, subs_raw):
         lines.append(", ".join(groups[pos]))
     while lines and lines[-1] == "":
         lines.pop()
+    if unknown_list:
+        lines.append(", ".join(unknown_list))
     return " / ".join(lines)
 
 
