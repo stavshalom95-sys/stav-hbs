@@ -51,7 +51,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .share-btn{display:flex;align-items:center;gap:5px;background:none;border:1px solid #1d9bf0;border-radius:10px;padding:7px 11px;color:#1d9bf0;font-size:12px;font-weight:700;font-family:var(--font);cursor:pointer;}
 .share-btn:active{transform:scale(0.97);}
 
-.tabs{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;padding:10px 16px;background:var(--bg);position:sticky;top:138px;z-index:90;}
+.tabs{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;padding:10px 16px;background:var(--bg);position:sticky;top:138px;z-index:90;}
 .tab{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:8px 2px;font-size:10px;font-weight:700;font-family:var(--font);color:var(--muted);cursor:pointer;transition:all .2s;text-align:center;}
 .tab.active{background:linear-gradient(135deg,var(--accent),var(--accent2));border-color:transparent;color:white;box-shadow:0 4px 16px rgba(79,125,255,0.35);}
 
@@ -394,6 +394,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
   <button class="tab" onclick="switchTab('journey',this)">🌍 מסע</button>
   <button class="tab" onclick="switchTab('insights',this)">📊 תובנות</button>
   <button class="tab" onclick="switchTab('scorers',this)">⚽ כובשים</button>
+  <button class="tab" onclick="switchTab('appearances',this)">👑 הופעות</button>
   <button class="tab" onclick="switchTab('bonus',this)">🎮 בונוס</button>
 </div>
 
@@ -454,6 +455,17 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
   <div id="tab-scorers" style="display:none">
     <input type="text" class="scorer-search" id="scorer-search" placeholder="🔍 חפש כובש..." oninput="filterScorers()" dir="rtl">
     <div class="chart-card" id="scorers-list"></div>
+  </div>
+
+  <!-- APPEARANCES (מלך ההופעות) -->
+  <div id="tab-appearances" style="display:none">
+    <div class="hero-card" style="text-align:center">
+      <div style="font-size:36px">👑</div>
+      <div style="font-size:20px;font-weight:900;margin-top:4px" id="appearance-king-name">-</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:2px">מלך ההופעות · <span id="appearance-king-count">-</span> הופעות</div>
+    </div>
+    <input type="text" class="scorer-search" id="appearance-search" placeholder="🔍 חפש שחקן..." oninput="filterAppearances()" dir="rtl">
+    <div class="chart-card" id="appearances-list"></div>
   </div>
 
   <!-- JOURNEY -->
@@ -788,7 +800,8 @@ const fwColor = n => FW_COLORS[n] || "#6b6b80";
 let state = {
   matches:INIT_MATCHES, seasons:INIT_SEASONS, stadiums:INIT_STADIUMS,
   scorers:INIT_SCORERS, days:INIT_DAYS, frameworks:INIT_FRAMEWORKS,
-  referees:INIT_REFEREES, homeTeams:INIT_HOME, awayTeams:INIT_AWAY
+  referees:INIT_REFEREES, homeTeams:INIT_HOME, awayTeams:INIT_AWAY,
+  appearances:[]
 };
 
 let expandedIdx = null;
@@ -805,6 +818,8 @@ function switchTab(id, btn) {
 function renderAll() {
   updateStats(); populateFilters(); renderMatches(state.matches);
   renderSeasons(); renderCharts(); renderScorers(state.scorers);
+  state.appearances = computeAppearances(state.matches);
+  renderAppearances(state.appearances); updateAppearanceKingBanner();
   renderJourney(); renderOdometer(); renderDramaIndex(); renderOnThisDay();
   renderHeatmap(); renderBadges(); renderQuiz();
 }
@@ -1490,6 +1505,69 @@ function filterScorers() {
   const q = document.getElementById('scorer-search').value.trim();
   const filtered = q ? state.scorers.filter(s=>s.name.includes(q)) : state.scorers;
   renderScorers(filtered);
+}
+
+// ── APPEARANCES (מלך ההופעות) ───────────────────────────────────────────────
+// The lineup cell format (see scripts/parse_lineups.py / parse_lineups_transfermarkt.py)
+// is " / "-separated GK/DEF/MID/ATT groups, comma-separated names within a
+// group, and "Starter (Sub)" when a substitution happened — both the
+// starter and the sub actually played, so both count as an appearance.
+const UNKNOWN_PLAYER_DISPLAY = 'לא ידוע';
+
+function extractLineupNames(lineupStr) {
+  if (!lineupStr || lineupStr === 'None') return [];
+  const names = [];
+  lineupStr.split(' / ').forEach(group => {
+    group.split(',').forEach(entry => {
+      entry = entry.trim();
+      if (!entry) return;
+      const m = entry.match(/^(.+?)(?:\s*\(([^)]+)\))?$/);
+      if (!m) return;
+      const starter = m[1].trim();
+      const sub = m[2] ? m[2].trim() : '';
+      if (starter && starter !== UNKNOWN_PLAYER_DISPLAY) names.push(starter);
+      if (sub && sub !== UNKNOWN_PLAYER_DISPLAY) names.push(sub);
+    });
+  });
+  return names;
+}
+
+function computeAppearances(matches) {
+  const counts = {};
+  matches.forEach(m => {
+    const names = new Set(extractLineupNames(m.lineup));
+    names.forEach(n => { counts[n] = (counts[n]||0) + 1; });
+  });
+  return Object.entries(counts)
+    .map(([name,count]) => ({name,count}))
+    .sort((a,b) => b.count - a.count || a.name.localeCompare(b.name,'he'));
+}
+
+function renderAppearances(list) {
+  const max = list[0]?.count || 1;
+  document.getElementById('appearances-list').innerHTML = list.length
+    ? list.map((s,i) => `
+      <div class="scorer-row">
+        <div class="scorer-rank ${i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'rank-n'}">${i+1}</div>
+        <div class="scorer-info">
+          <div class="scorer-name">${s.name}</div>
+          <div class="scorer-bar-track"><div class="scorer-bar-fill" style="width:${(s.count/max)*100}%"></div></div>
+        </div>
+        <div class="scorer-goals">${s.count} 👕</div>
+      </div>`).join('')
+    : '<div class="empty"><div class="emoji">🔍</div><p>לא נמצא</p></div>';
+}
+
+function filterAppearances() {
+  const q = document.getElementById('appearance-search').value.trim();
+  const filtered = q ? state.appearances.filter(s=>s.name.includes(q)) : state.appearances;
+  renderAppearances(filtered);
+}
+
+function updateAppearanceKingBanner() {
+  const king = state.appearances[0];
+  document.getElementById('appearance-king-name').textContent = king ? king.name : '-';
+  document.getElementById('appearance-king-count').textContent = king ? king.count : '-';
 }
 
 // ── FILTERS ───────────────────────────────────────────────────────────────────
