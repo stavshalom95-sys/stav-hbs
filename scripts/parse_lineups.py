@@ -303,6 +303,15 @@ NAME_MAP = {
     # for the same player the user knows as Eitan Abu Abid; short display
     # name kept as the user specified.
     "איאד אבו עוביד": ("אבו עביד", "DEF"),
+    # 2025/26-season additions (rows 244, 495, 559, 562)
+    "נועם דיעי": ("דיעי", "MID"),
+    "מתן כהן": ("מתן כהן", "MID"),
+    "בן אנריקה גורדין ענברי": ("גורדין", "GK"),
+    "ג'ואאו ויקטור ויירה פריירה סוזה": ("ויקטור", "MID"),
+    "ניב יהושע": ("יהושע", "MID"),
+    "פדרו אמאדור": ("אמאדור", "DEF"),
+    "איתי רוטמן": ("רוטמן", "DEF"),
+    "יונס מלדה": ("מלדה", "ATT"),
 }
 
 POSITION_ORDER = ["GK", "DEF", "MID", "ATT"]
