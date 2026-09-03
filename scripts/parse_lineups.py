@@ -75,7 +75,7 @@ NAME_MAP = {
     "קינגס קאוגנה": ("קאנגווה", "MID"),
     "אליאל פרץ": ("פרץ", "MID"),
     "מוחמד כנעאן": ("כנעאן", "MID"),
-    "מוחמד אבו רומי": ("אבו רומי", "MID"),
+    "מוחמד אבו רומי": ("אבו רומי", "ATT"),
     "איתי חזות": ("חזות", "MID"),
     "זאהי אחמד": ("אחמד", "MID"),
     "סמיר פרהוד": ("פרהוד", "MID"),
@@ -312,6 +312,27 @@ NAME_MAP = {
     "פדרו אמאדור": ("אמאדור", "DEF"),
     "איתי רוטמן": ("רוטמן", "DEF"),
     "יונס מלדה": ("מלדה", "ATT"),
+    # Transfermarkt display-name aliases (European matches — see
+    # scripts/parse_lineups_transfermarkt.py). Same players, same
+    # short-name/position values as their football.org.il entry above;
+    # keyed separately here because Transfermarkt's raw display name for a
+    # player never matches the Hebrew full name football.org.il uses.
+    "Marciano": ("מרציאנו", "GK"),
+    "Miguel Vítor": ("ויטור", "DEF"),
+    "Baltaxa": ("בלטקסה", "DEF"),
+    "Mizrahi": ("מזרחי", "DEF"),
+    "Rotman": ("רוטמן", "DEF"),
+    "Peretz": ("פרץ", "MID"),
+    "Ventura": ("ונטורה", "MID"),
+    "Ahmed": ("אחמד", "MID"),
+    "Yehoshua": ("יהושע", "MID"),
+    "Zlatanovic": ("זלאטנוביץ'", "ATT"),
+    "East": ("איסט", "ATT"),
+    "Djibril Diop": ("דיופ", "DEF"),
+    "Pedro Amador": ("אמאדור", "DEF"),
+    "Amit Ohana": ("אוחנה", "ATT"),
+    "Muhammad Abu Rumi": ("אבו רומי", "ATT"),
+    "Hamode Kanaan": ("כנעאן", "MID"),
 }
 
 POSITION_ORDER = ["GK", "DEF", "MID", "ATT"]
