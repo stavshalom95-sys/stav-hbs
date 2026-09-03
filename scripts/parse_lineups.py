@@ -298,6 +298,11 @@ NAME_MAP = {
     "גיל בלומשטיין": ("בלומשטיין", "MID"),
     "יוסי אלקיים": ("אלקיים", "MID"),
     "צחי מחלוף": ("מחלוף", "ATT"),
+    # Follow-up addition (last remaining unmapped name blocking rows).
+    # Site spelling is "איאד אבו עוביד" (Iyad Abu Ubaid) — a variant/typo
+    # for the same player the user knows as Eitan Abu Abid; short display
+    # name kept as the user specified.
+    "איאד אבו עוביד": ("אבו עביד", "DEF"),
 }
 
 POSITION_ORDER = ["GK", "DEF", "MID", "ATT"]
