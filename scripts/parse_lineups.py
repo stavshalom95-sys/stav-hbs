@@ -333,6 +333,152 @@ NAME_MAP = {
     "Amit Ohana": ("אוחנה", "ATT"),
     "Muhammad Abu Rumi": ("אבו רומי", "ATT"),
     "Hamode Kanaan": ("כנעאן", "MID"),
+    # European-matches batch (rows 165-560), high-confidence surname matches
+    # confirmed by the user against the existing football.org.il entries.
+    "Abu Abaid": ("אבו עביד", "DEF"),
+    "Acolatse": ("אקולטסה", "MID"),
+    "Ansah": ("אנסה", "ATT"),
+    "Barda": ("ברדה", "ATT"),
+    "Bareiro": ("בריירו", "MID"),
+    "Ben Basat": ("בן בסט", "ATT"),
+    "Buzaglo": ("בוזגלו", "MID"),
+    "Dadia": ("דדיה", "DEF"),
+    "Davidzada": ("דודזאדה", "DEF"),
+    "Einbinder": ("איינבינדר", "MID"),
+    "Eitan Tibi": ("טיבי", "DEF"),
+    "Elhamed": ("אלחמיד", "DEF"),
+    "Elias": ("אליאס", "MID"),
+    "Elo": ("אלו", "DEF"),
+    "Ezra": ("עזרא", "MID"),
+    "Ghadir": ("גדיר", "ATT"),
+    "Glazer": ("גלזר", "GK"),
+    "Goldberg": ("גולדברג", "DEF"),
+    "Gordana": ("גורדנה", "MID"),
+    "Goresh": ("גורש", "GK"),
+    "Haimov": ("חיימוב", "GK"),
+    "Hasselbaink": ("האסלבנק", "ATT"),
+    "Hatuel": ("חטואל", "ATT"),
+    "Hemed": ("חמד", "ATT"),
+    "Hoban": ("הובאן", "MID"),
+    "Jehezkel": ("יחזקאל", "MID"),
+    "Kabha": ("קבהא", "MID"),
+    "Klimala": ("קלימלה", "ATT"),
+    "Korhut": ("קורהוט", "DEF"),
+    "Levita": ("לויטה", "GK"),
+    "Loai Taha": ("טאהא", "DEF"),
+    "Lopes": ("לופז", "DEF"),
+    "Maman": ("ממן", "MID"),
+    "Marín": ("מארין", "MID"),
+    "Martins": ("מרטינס", "MID"),
+    "Melikson": ("מליקסון", "MID"),
+    "Micha": ("מיכה", "MID"),
+    "Michael Ohana": ("אוחנה", "MID"),
+    "Nwakaeme": ("נוואקמה", "MID"),
+    "Ogu": ("אוגו", "MID"),
+    "Pekhart": ("פקהארט", "ATT"),
+    "Peterson": ("פטרסון", "MID"),
+    "Petrucci": ("פטרוצי", "MID"),
+    "Păun": ("פאון", "MID"),
+    "Radi": ("ראדי", "MID"),
+    "Sabag": ("סבג", "MID"),
+    "Safuri": ("ספורי", "MID"),
+    "Sahar": ("שהר", "ATT"),
+    "Sallalich": ("סלליך", "MID"),
+    "Selmani": ("סלמאני", "ATT"),
+    "Setkus": ("סטקוס", "GK"),
+    "Shamir": ("שמיר", "MID"),
+    "Shechter": ("שכטר", "ATT"),
+    "Shviro": ("שבירו", "ATT"),
+    "Suleymanov": ("סולימאנוב", "MID"),
+    "Taha": ("טאהא", "DEF"),
+    "Tibi": ("טיבי", "DEF"),
+    "Tomer Yosefi": ("יוספי", "MID"),
+    "Yosefi": ("יוספי", "MID"),
+    "Tzedek": ("צדק", "DEF"),
+    "Vova Broun": ("בראון", "MID"),
+    "Yuval Shabtai": ("שבתאי", "MID"),
+    # European-matches batch, ambiguous-surname cases the user resolved
+    # against who actually played in Europe (not just a surname guess).
+    "Badash": ("בדש", "ATT"),  # ברק בדש, not גיא בדש
+    "Harush": ("הרוש", "GK"),  # אריאל הרוש, not שמעון הרוש
+    "Ohana": ("אוחנה", "MID"),  # מיכאל אוחנה, not the two ATT namesakes
+    "Turgeman": ("תורג'מן", "ATT"),  # אלון תורג'מן, not בן תורג'מן
+    # European-matches batch, genuinely new players (user-supplied short
+    # name + position; Keltjens and William were given as "DEF/MID" — used
+    # DEF as the default bucket, flagged back to the user to correct if a
+    # specific match needs the MID bucket instead).
+    "Anestis": ("אנסטיס", "GK"),
+    "Carrillo": ("קאריליו", "ATT"),
+    "Cuenca": ("קואנקה", "DEF"),
+    "Cétout": ("סטו", "DEF"),
+    "Josué": ("ז'וסואה", "MID"),
+    "Keltjens": ("קלטינס", "DEF"),
+    "Lúcio Mara.": ("לוסיו", "ATT"),  # site truncates to this exact text
+    "Ohayon": ("אוחיון", "DEF"),
+    "William": ("סוארס", "DEF"),
+    # Biton/Bitton is genuinely ambiguous on Transfermarkt (could be אורן
+    # ביטון, DEF, or דן ביטון, MID) — parse_lineups_transfermarkt.py
+    # disambiguates by pitch position/bench position code before lookup and
+    # rewrites the raw name to one of these two synthetic keys, per the
+    # user's explicit instruction to resolve by position rather than guess.
+    "Biton (DEF)": ("ביטון", "DEF"),
+    "Biton (MID)": ("דן ביטון", "MID"),
+    # European-matches batch, round 2 (Transfermarkt shows these players'
+    # full name on the substitutes bench rather than the bare surname used
+    # in the pitch/formation view — same "starter unmapped blocks the sub
+    # check too" pattern as the football.org.il pipeline's round-2 batches).
+    # All are full first+last name matches against already-confirmed
+    # entries, not surname guesses, except the two the user confirmed
+    # explicitly (Varenne/Warren, Danilo Asprilla).
+    "Adrian Păun": ("פאון", "MID"),
+    "Alon Turgeman": ("תורג'מן", "ATT"),
+    "Amir Ganah": ("גנאח", "MID"),
+    "Amit Bitton": ("ביטון", "DEF"),
+    "Anthony Nwakaeme": ("נוואקמה", "MID"),
+    "Anthony Varenne": ("וארן", "ATT"),  # Transfermarkt spelling of Gaëtan Anthony Warren
+    "Antonio Sefer": ("ספר", "MID"),
+    "Astrit Selmani": ("סלמאני", "ATT"),
+    "Ben Sahar": ("שהר", "ATT"),
+    "Dan Einbinder": ("איינבינדר", "MID"),
+    "Danilo Asprilla": ("אספרייה", "MID"),
+    "David Keltjens": ("קלטינס", "DEF"),
+    "Davide Petrucci": ("פטרוצי", "MID"),
+    "Dor Elo": ("אלו", "DEF"),
+    "Dor Micha": ("מיכה", "MID"),
+    "Eden Shamir": ("שמיר", "MID"),
+    "Elton Acolatse": ("אקולטסה", "MID"),
+    "Elyaniv Barda": ("ברדה", "ATT"),
+    "Eugene Ansah": ("אנסה", "ATT"),
+    "Eyad Abu Abaid": ("אבו עביד", "DEF"),
+    "Hatem Abd Elhamed": ("אלחמיד", "DEF"),
+    "Hen Ezra": ("עזרא", "MID"),
+    "Ilay Madmon": ("מדמון", "MID"),
+    "Isaac Cuenca": ("קואנקה", "DEF"),
+    "Itamar Shviro": ("שבירו", "ATT"),
+    "Itay Shechter": ("שכטר", "ATT"),
+    "Jimmy Marín": ("מארין", "MID"),
+    "José Ángel Carrillo": ("קאריליו", "ATT"),
+    "Lúcio Maranhão": ("לוסיו", "ATT"),
+    "Maharan Radi": ("ראדי", "MID"),
+    "Maor Buzaglo": ("בוזגלו", "MID"),
+    "Maor Melikson": ("מליקסון", "MID"),
+    "Marwan Kabha": ("קבהא", "MID"),
+    "Matan Ohayon": ("אוחיון", "DEF"),
+    "Mohammad Ghadir": ("גדיר", "ATT"),
+    "Naor Sabag": ("סבג", "MID"),
+    "Niv Zrihan": ("זריהן", "MID"),
+    "Or Dadia": ("דדיה", "DEF"),
+    "Ovidiu Hoban": ("הובאן", "MID"),
+    "Ramzi Safuri": ("ספורי", "MID"),
+    "Roei Gordana": ("גורדנה", "MID"),
+    "Roi Maman": ("ממן", "MID"),
+    "Rotem Hatuel": ("חטואל", "ATT"),
+    "Sagiv Jehezkel": ("יחזקאל", "MID"),
+    "Shai Elias": ("אליאס", "MID"),
+    "Shapi Suleymanov": ("סולימאנוב", "MID"),
+    "Tomas Pekhart": ("פקהארט", "ATT"),
+    "Tomer Hemed": ("חמד", "ATT"),
+    "Yoan Stoyanov": ("סטויאנוב", "DEF"),
 }
 
 POSITION_ORDER = ["GK", "DEF", "MID", "ATT"]

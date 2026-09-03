@@ -165,6 +165,43 @@ POSITION_CODE_HINTS = {
     "LW": "ATT", "RW": "ATT", "CF": "ATT", "SS": "ATT", "ST": "ATT", "FW": "ATT",
 }
 
+# "Biton"/"Bitton" is genuinely ambiguous on Transfermarkt — could be אורן
+# ביטון (DEF) or דן ביטון (MID) — see the two synthetic "Biton (DEF)" /
+# "Biton (MID)" NAME_MAP keys. Per the user's explicit instruction, resolve
+# by the player's actual position in *this* match rather than guessing:
+# starters are classified by how deep they sit in the pitch diagram (the
+# defensive line sits at top% >= ~48 in every formation seen so far),
+# substitutes by Transfermarkt's own explicit position code.
+BITON_RAW_NAMES = {"Biton", "Bitton"}
+BITON_STARTER_DEF_THRESHOLD = 48.0
+
+
+def resolve_biton(starters, bench):
+    def starter_key(name, top_pct):
+        if name not in BITON_RAW_NAMES:
+            return name
+        return "Biton (DEF)" if top_pct >= BITON_STARTER_DEF_THRESHOLD else "Biton (MID)"
+
+    def bench_key(name, pos_code):
+        if name not in BITON_RAW_NAMES:
+            return name
+        bucket = POSITION_CODE_HINTS.get(pos_code)
+        if bucket == "DEF":
+            return "Biton (DEF)"
+        if bucket in ("MID", "ATT"):
+            return "Biton (MID)"
+        return name  # unresolvable — falls through to a normal unmapped error
+
+    starters = [
+        (pid, starter_key(name, top_pct), top_pct, sub_out_id)
+        for pid, name, top_pct, sub_out_id in starters
+    ]
+    bench = [
+        (pid, bench_key(name, pos_code), pos_code, sub_in_id)
+        for pid, name, pos_code, sub_in_id in bench
+    ]
+    return starters, bench
+
 
 def process_match(arg: str) -> str:
     url = to_url(arg)
@@ -174,6 +211,7 @@ def process_match(arg: str) -> str:
 
     starters = parse_starters(block)
     bench = parse_bench(block)
+    starters, bench = resolve_biton(starters, bench)
 
     # The goalkeeper sits deepest in Transfermarkt's pitch diagram (max top%)
     # regardless of formation — more robust than relying on shirt number 1.
