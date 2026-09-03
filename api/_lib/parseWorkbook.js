@@ -53,6 +53,19 @@ function parseDateCell(dv) {
   return String(dv || "");
 }
 
+// Guards against Sheets/Excel silently auto-converting a typed score like
+// "2-1" into a date (Feb 1) when the result column isn't formatted as plain
+// text — reconstructs "M-D" from the date parts instead of stringifying a
+// raw serial number (e.g. "39514") into the dashboard.
+function parseResultCell(rv) {
+  if (typeof rv === "number" && rv > 0) {
+    const p = XLSX.SSF.parse_date_code(rv);
+    return p ? `${p.m}-${p.d}` : String(rv);
+  }
+  if (rv instanceof Date) return `${rv.getMonth() + 1}-${rv.getDate()}`;
+  return String(rv || "").trim();
+}
+
 function parseTimeCell(tv) {
   if (typeof tv === "number") {
     return `${String(Math.floor(tv * 24)).padStart(2, "0")}:${String(Math.round((tv * 1440) % 60)).padStart(2, "0")}`;
@@ -78,7 +91,7 @@ export function parseWorkbook(buffer) {
     if (!r[0]) continue;
     matches.push({
       home: String(r[0] || "").trim(), away: String(r[1] || "").trim(), date: parseDateCell(r[2]), day: String(r[4] || "").trim(),
-      time: parseTimeCell(r[5]), framework: String(r[6] || "").trim(), round: String(r[7] || "").trim(), result: String(r[8] || "").trim(),
+      time: parseTimeCell(r[5]), framework: String(r[6] || "").trim(), round: String(r[7] || "").trim(), result: parseResultCell(r[8]),
       stadium: String(r[9] || "").trim(), attendance: typeof r[10] === "number" ? Math.round(r[10]) : 0,
       scorers: String(r[11] || "").trim(), referee: String(r[12] || "").trim(), bonus: String(r[13] || "").trim(),
       lineup: String(r[14] || "").trim(),
