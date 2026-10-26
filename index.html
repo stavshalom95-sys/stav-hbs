@@ -1018,6 +1018,7 @@ function fillCardTicket(card) {
   const chips = TICKET_FIELDS.filter(k => seat[k]).map(k => `<span class="ticket-chip">${k}<b>${escT(seat[k])}</b></span>`);
   if (t.price) chips.push(`<span class="ticket-chip">מחיר<b>₪${Number(t.price).toLocaleString('he-IL',{maximumFractionDigits:2})}</b></span>`);
   if (t.note) chips.push(`<span class="ticket-chip">${escT(t.note)}</span>`);
+  if (t.invite) chips.push(`<span class="ticket-chip"><b>🎁 הזמנה</b></span>`);
   const n = t.imgs.length;
   box.innerHTML = `${chips.length ? `<div class="ticket-seats">${chips.join('')}</div>` : ''}
     <button class="ticket-btn" onclick="event.stopPropagation();openTicket('${box.dataset.date}')">🎟 הכרטיס שלי${n > 1 ? ` (${n})` : ''}</button>`;
