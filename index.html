@@ -94,6 +94,19 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .detail-label{font-size:10px;color:var(--muted);margin-bottom:2px;}
 .detail-value{font-size:12px;font-weight:700;}
 .detail-full{background:var(--surface2);border-radius:10px;padding:8px 10px;margin-bottom:8px;}
+.ticket-box{background:linear-gradient(135deg,rgba(255,71,87,0.10),rgba(124,58,237,0.10));border:1px dashed rgba(255,71,87,0.45);border-radius:12px;padding:10px;margin-bottom:8px;}
+.ticket-box:empty{display:none;}
+.ticket-seats{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;}
+.ticket-chip{background:var(--surface2);border-radius:8px;padding:5px 9px;font-size:11px;color:var(--muted);}
+.ticket-chip b{color:var(--text);font-weight:800;margin-right:4px;}
+.ticket-btn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;background:linear-gradient(135deg,#e11d48,var(--accent2));border:none;border-radius:10px;padding:10px;color:#fff;font-size:13px;font-weight:800;font-family:var(--font);cursor:pointer;box-shadow:0 4px 16px rgba(225,29,72,0.3);}
+.ticket-btn:active{transform:scale(0.98);}
+.ticket-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);backdrop-filter:blur(8px);z-index:250;flex-direction:column;align-items:center;padding:16px;overflow-y:auto;}
+.ticket-overlay.open{display:flex;}
+.ticket-overlay-head{width:100%;max-width:520px;display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px;color:#fff;font-weight:800;font-size:14px;}
+.ticket-overlay-close{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:8px 14px;color:var(--text);font-family:var(--font);font-weight:700;cursor:pointer;flex-shrink:0;}
+.ticket-overlay img{width:100%;max-width:520px;border-radius:12px;margin-bottom:12px;background:#fff;box-shadow:0 10px 40px rgba(0,0,0,0.6);}
+.meta-ticket{color:#ff6b81;}
 .detail-full .detail-value{font-size:12px;font-weight:600;line-height:1.5;}
 .bonus-box{background:linear-gradient(135deg,rgba(79,125,255,0.1),rgba(124,58,237,0.1));border:1px solid rgba(79,125,255,0.3);border-radius:10px;padding:8px 12px;display:flex;align-items:flex-start;gap:8px;}
 .bonus-box .star{font-size:16px;flex-shrink:0;}
@@ -941,6 +954,7 @@ function buildMatchCard(m, i) {
     ${hasScorers ? `<div class="detail-full"><div class="detail-label">⚽ כובשים לב"ש</div><div class="detail-value">${m.scorers}</div></div>` : ''}
     ${hasBonus ? `<div class="bonus-box"><span class="star">⭐</span><span class="text">${m.bonus}</span></div>` : ''}
     ${hasLineup ? `<div class="lineup-box"><div class="lineup-label">📋 הרכב פותח לב"ש</div><div class="lineup-text">${m.lineup.split(' / ').join('\n')}</div></div>` : ''}
+    <div class="ticket-box" data-date="${m.date}"></div>
     <div class="match-photo-wrap" data-date="${m.date}" data-fallback="${(STADIUM_IMAGES[m.stadium]||'').replace(/"/g,'&quot;')}" style="width:100%;height:150px;overflow:hidden;border-radius:10px;margin-top:8px;background:#1c1c26"></div>
   `;
 
@@ -955,6 +969,7 @@ function buildMatchCard(m, i) {
         <div class="match-meta">
           ${m.stadium?`<span class="meta-item">📍 ${m.stadium}</span>`:''}
           ${m.attendance?`<span class="meta-item">👥 ${Number(m.attendance).toLocaleString()}</span>`:''}
+          ${TICKETS[m.date]?`<span class="meta-item meta-ticket">🎟 כרטיס</span>`:''}
         </div>
       </div>
       <div class="match-side">
@@ -982,12 +997,63 @@ function loadCardPhoto(card) {
   wrap.appendChild(img);
 }
 
+// ── TICKETS (past matches only; generated from ticket emails into /tickets) ──
+const TICKETS_BASE = 'https://raw.githubusercontent.com/stavshalom95-sys/stav-hbs/main/tickets/';
+const TICKET_FIELDS = ['יציע','שער','כניסה','גוש','אזור','שורה','כסא'];
+var TICKETS = {};
+const ticketsReady = fetch(TICKETS_BASE + 'tickets.json', {cache:'no-cache'})
+  .then(r => r.ok ? r.json() : {})
+  .then(t => { TICKETS = t || {}; if (typeof state !== 'undefined' && state.matches && state.matches.length) renderAll(); })
+  .catch(() => {});
+
+function escT(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+function fillCardTicket(card) {
+  const box = card.querySelector('.ticket-box');
+  if (!box || box.dataset.loaded) return;
+  const t = TICKETS[box.dataset.date];
+  if (!t || !t.imgs || !t.imgs.length) return;
+  box.dataset.loaded = '1';
+  const seat = t.seat || {};
+  const chips = TICKET_FIELDS.filter(k => seat[k]).map(k => `<span class="ticket-chip">${k}<b>${escT(seat[k])}</b></span>`);
+  if (t.price) chips.push(`<span class="ticket-chip">מחיר<b>₪${Number(t.price).toLocaleString('he-IL',{maximumFractionDigits:2})}</b></span>`);
+  if (t.note) chips.push(`<span class="ticket-chip">${escT(t.note)}</span>`);
+  const n = t.imgs.length;
+  box.innerHTML = `${chips.length ? `<div class="ticket-seats">${chips.join('')}</div>` : ''}
+    <button class="ticket-btn" onclick="event.stopPropagation();openTicket('${box.dataset.date}')">🎟 הכרטיס שלי${n > 1 ? ` (${n})` : ''}</button>`;
+}
+
+function openTicket(date) {
+  const t = TICKETS[date];
+  if (!t) return;
+  let ov = document.getElementById('ticket-overlay');
+  if (!ov) {
+    ov = document.createElement('div');
+    ov.id = 'ticket-overlay';
+    ov.className = 'ticket-overlay';
+    ov.addEventListener('click', e => { if (e.target === ov) closeTicket(); });
+    document.body.appendChild(ov);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeTicket(); });
+  }
+  ov.innerHTML = `<div class="ticket-overlay-head"><span>🎟 ${formatDate(date)}</span><button class="ticket-overlay-close" onclick="closeTicket()">סגור ✕</button></div>`
+    + t.imgs.map((f, i) => `<img src="${TICKETS_BASE}${encodeURIComponent(f)}" alt="כרטיס ${i + 1}" loading="lazy">`).join('');
+  ov.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeTicket() {
+  const ov = document.getElementById('ticket-overlay');
+  if (ov) ov.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
 function toggleCard(card) {
   const isOpen = card.classList.contains('expanded');
   document.querySelectorAll('.match-card.expanded').forEach(c=>c.classList.remove('expanded'));
   if (!isOpen) {
     card.classList.add('expanded');
     loadCardPhoto(card);
+    fillCardTicket(card);
     setTimeout(()=>card.scrollIntoView({behavior:'smooth',block:'nearest'}),100);
   }
 }
